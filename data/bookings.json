@@ -104,10 +104,10 @@
     "checkIn": "2026-04-20",
     "checkOut": "2026-04-21",
     "platform": "Booking",
-    "gross": 123,
+    "gross": 1230,
     "commission": 123,
     "nights": 1,
-    "net": 0
+    "net": 1107
   },
   {
     "id": 12,
