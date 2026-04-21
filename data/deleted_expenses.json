@@ -9,5 +9,16 @@
     "cost": 9,
     "total": 9,
     "paid": true
+  },
+  {
+    "id": 6,
+    "apt": "Rebekka",
+    "room": "Bedroom",
+    "cat": "Linens",
+    "item": "Mattress protector",
+    "qty": 1,
+    "cost": 390.06,
+    "total": 390.06,
+    "paid": true
   }
 ]

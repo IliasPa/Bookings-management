@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs").promises;
 const cors = require("cors");
+const util = require("util");
+const exec = util.promisify(require("child_process").exec);
 
 const app = express();
 app.use(cors());
@@ -25,6 +27,41 @@ async function readJsonSafe(name) {
 async function writeJson(name, data) {
   const p = path.join(DATA_DIR, name);
   await fs.writeFile(p, JSON.stringify(data, null, 2), "utf8");
+  // attempt to commit & push changes to the repo so GitHub Pages (or the repo) is updated
+  const rel = `data/${name}`.replace(/\\/g, "/");
+  commitAndPush(rel, `Update ${name}`).catch((err) =>
+    console.error("git sync error:", err && err.stderr ? err.stderr : err.message || err),
+  );
+}
+
+async function commitAndPush(fileRelPath, message) {
+  const repoRoot = path.join(__dirname, "..");
+  const filePathForGit = fileRelPath.replace(/\\/g, "/");
+  try {
+    await exec(`git add -- "${filePathForGit}"`, { cwd: repoRoot });
+  } catch (err) {
+    console.error("git add failed:", err && err.stderr ? err.stderr : err.message || err);
+    return;
+  }
+
+  try {
+    const safeMessage = message.replace(/"/g, '\\"');
+    await exec(`git commit -m "${safeMessage}"`, { cwd: repoRoot });
+  } catch (err) {
+    const stderr = err && err.stderr ? err.stderr : err && err.message ? err.message : "";
+    if (/nothing to commit/i.test(stderr) || /working tree clean/i.test(stderr)) {
+      return;
+    }
+    console.error("git commit failed:", stderr);
+    return;
+  }
+
+  try {
+    const branch = process.env.GITHUB_BRANCH || "main";
+    await exec(`git push origin ${branch}`, { cwd: repoRoot });
+  } catch (err) {
+    console.error("git push failed:", err && err.stderr ? err.stderr : err.message || err);
+  }
 }
 
 app.put("/api/bookings/:id", async (req, res) => {
