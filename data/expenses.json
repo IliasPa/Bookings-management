@@ -1,16 +1,5 @@
 [
   {
-    "id": 8,
-    "apt": "Rebekka",
-    "room": "Kitchen",
-    "cat": "Appliances",
-    "item": "Coffee maker",
-    "qty": 1,
-    "cost": 2000,
-    "total": 2000,
-    "paid": true
-  },
-  {
     "id": 9,
     "apt": "Rebekka",
     "room": "Kitchen",
