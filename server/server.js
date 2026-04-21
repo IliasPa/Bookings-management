@@ -30,7 +30,10 @@ async function writeJson(name, data) {
   // attempt to commit & push changes to the repo so GitHub Pages (or the repo) is updated
   const rel = `data/${name}`.replace(/\\/g, "/");
   commitAndPush(rel, `Update ${name}`).catch((err) =>
-    console.error("git sync error:", err && err.stderr ? err.stderr : err.message || err),
+    console.error(
+      "git sync error:",
+      err && err.stderr ? err.stderr : err.message || err,
+    ),
   );
 }
 
@@ -40,7 +43,10 @@ async function commitAndPush(fileRelPath, message) {
   try {
     await exec(`git add -- "${filePathForGit}"`, { cwd: repoRoot });
   } catch (err) {
-    console.error("git add failed:", err && err.stderr ? err.stderr : err.message || err);
+    console.error(
+      "git add failed:",
+      err && err.stderr ? err.stderr : err.message || err,
+    );
     return;
   }
 
@@ -48,8 +54,12 @@ async function commitAndPush(fileRelPath, message) {
     const safeMessage = message.replace(/"/g, '\\"');
     await exec(`git commit -m "${safeMessage}"`, { cwd: repoRoot });
   } catch (err) {
-    const stderr = err && err.stderr ? err.stderr : err && err.message ? err.message : "";
-    if (/nothing to commit/i.test(stderr) || /working tree clean/i.test(stderr)) {
+    const stderr =
+      err && err.stderr ? err.stderr : err && err.message ? err.message : "";
+    if (
+      /nothing to commit/i.test(stderr) ||
+      /working tree clean/i.test(stderr)
+    ) {
       return;
     }
     console.error("git commit failed:", stderr);
@@ -60,7 +70,10 @@ async function commitAndPush(fileRelPath, message) {
     const branch = process.env.GITHUB_BRANCH || "main";
     await exec(`git push origin ${branch}`, { cwd: repoRoot });
   } catch (err) {
-    console.error("git push failed:", err && err.stderr ? err.stderr : err.message || err);
+    console.error(
+      "git push failed:",
+      err && err.stderr ? err.stderr : err.message || err,
+    );
   }
 }
 

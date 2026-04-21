@@ -669,13 +669,6 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
           </div>
         ))}
         <div style={{ padding: 10, paddingTop: 6 }}>
-          <button
-            type="button"
-            className={`fbtn${showSync ? " active" : ""}`}
-            onClick={() => setShowSync((s) => !s)}
-          >
-            GitHub Sync
-          </button>
           {showSync && (
             <div style={{ marginTop: 8 }}>
               <label className="fl">Owner</label>
@@ -935,11 +928,10 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
                   {bookings
                     .filter((b) => apt === "All" || b.apt === apt)
                     .sort((a, b) => {
-                      // Put past bookings (checkOut < today) at the end, keep upcoming first
-                      const aPast = a.checkOut < today;
-                      const bPast = b.checkOut < today;
+                      const aPast = (a.checkOut || "") < today;
+                      const bPast = (b.checkOut || "") < today;
                       if (aPast !== bPast) return aPast ? 1 : -1;
-                      return a.checkIn.localeCompare(b.checkIn);
+                      return (a.checkIn || "").localeCompare(b.checkIn || "");
                     })
                     .map((b) => (
                       <tr
