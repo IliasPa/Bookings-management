@@ -1,0 +1,24 @@
+[
+  {
+    "id": 9,
+    "apt": "Rebekka",
+    "room": "Kitchen",
+    "cat": "Appliances",
+    "item": "Toaster",
+    "qty": 1,
+    "cost": 16,
+    "total": 16,
+    "paid": true
+  },
+  {
+    "id": 10,
+    "apt": "Rebekka",
+    "room": "Bathroom",
+    "cat": "Appliances",
+    "item": "Hair drier",
+    "qty": 1,
+    "cost": 30,
+    "total": 30,
+    "paid": true
+  }
+]

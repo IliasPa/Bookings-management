@@ -210,21 +210,11 @@ if (FILE_MODE) {
       deletedBookings: "deleted_bookings",
       deletedExpenses: "deleted_expenses",
     };
-    // determine a sensible server data base path depending on how the HTML is served
-    // default: relative 'server/data/' (works when HTML is in v1.0)
-    let serverDataBase = "server/data/";
-    try {
-      const loc = window && window.location && window.location.pathname;
-      if (loc) {
-        const dir = loc.slice(0, loc.lastIndexOf("/") + 1);
-        serverDataBase = dir + "server/data/";
-      }
-    } catch (e) {}
     for (const [name, file] of Object.entries(fileMap)) {
       const key = lsKey(name);
       if (localStorage.getItem(key)) continue;
       try {
-        const res = await ORIGINAL_FETCH(`${serverDataBase}${file}.json`);
+        const res = await ORIGINAL_FETCH(`server/data/${file}.json`);
         if (!res.ok) continue;
         const data = await res.json();
         if (Array.isArray(data)) {

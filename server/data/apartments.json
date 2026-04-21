@@ -5,5 +5,10 @@
     "city": "Lefkada",
     "beds": 2
   },
-  { "id": "Back", "name": "Vardania Smart Stay", "city": "Lefkada", "beds": 2 }
+  {
+    "id": "Back",
+    "name": "Vardania Smart Stay",
+    "city": "Lefkada",
+    "beds": 2
+  }
 ]

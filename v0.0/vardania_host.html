@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aegean Host — Property Manager</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f3f0;color:#1a1a18;font-size:14px}
+:root{
+  --bg-primary:#ffffff;
+  --bg-secondary:#f4f3f0;
+  --bg-tertiary:#eceae4;
+  --text-primary:#1a1a18;
+  --text-secondary:#5f5e5a;
+  --text-tertiary:#888780;
+  --border-light:rgba(0,0,0,0.10);
+  --border-mid:rgba(0,0,0,0.18);
+  --radius-md:8px;
+  --radius-lg:12px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg-primary:#1e1e1c;
+    --bg-secondary:#2a2a28;
+    --bg-tertiary:#232321;
+    --text-primary:#f0ede6;
+    --text-secondary:#b4b2a9;
+    --text-tertiary:#888780;
+    --border-light:rgba(255,255,255,0.08);
+    --border-mid:rgba(255,255,255,0.14);
+  }
+  body{background:var(--bg-tertiary);color:var(--text-primary)}
+}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:200px;background:var(--bg-primary);border-right:0.5px solid var(--border-light);padding:20px 0;flex-shrink:0;display:flex;flex-direction:column}
+.logo{padding:0 18px 18px;border-bottom:0.5px solid var(--border-light);margin-bottom:10px}
+.logo-name{font-size:15px;font-weight:600;color:var(--text-primary)}
+.logo-sub{font-size:11px;color:var(--text-tertiary);margin-top:2px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:9px 18px;cursor:pointer;font-size:13px;color:var(--text-secondary);border-left:2px solid transparent;transition:all .15s}
+.nav-item:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.nav-item.active{border-left-color:#D85A30;color:var(--text-primary);font-weight:500;background:var(--bg-secondary)}
+.sidebar-foot{padding:16px 18px 0;font-size:11px;color:var(--text-tertiary);margin-top:auto}
+.main{flex:1;padding:28px 36px;overflow:auto}
+.page-title{font-size:22px;font-weight:500;margin-bottom:3px;color:var(--text-primary)}
+.page-sub{font-size:12px;color:var(--text-tertiary);margin-bottom:24px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:var(--bg-secondary);border-radius:var(--radius-md);padding:14px 16px}
+.kpi-label{font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.kpi-value{font-size:20px;font-weight:500;color:var(--text-primary)}
+.kpi-sub{font-size:11px;color:var(--text-tertiary);margin-top:3px}
+.apt-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.card{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.card-title{font-size:13px;font-weight:500;color:var(--text-primary)}
+.card-meta{font-size:11px;color:var(--text-tertiary)}
+.apt-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.stat-label{font-size:10px;color:var(--text-tertiary);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.stat-val{font-size:17px;font-weight:500;color:var(--text-primary)}
+.section-title{font-size:13px;font-weight:500;margin-bottom:12px;color:var(--text-primary)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:8px 10px;text-align:left;font-size:10px;font-weight:500;color:var(--text-tertiary);border-bottom:0.5px solid var(--border-light);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td{padding:10px 10px;border-bottom:0.5px solid var(--border-light);color:var(--text-primary)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg-secondary)}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:5px;flex-shrink:0;vertical-align:middle}
+.hrow{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.frow{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.fbtn{padding:4px 12px;border-radius:var(--radius-md);border:0.5px solid var(--border-mid);background:transparent;cursor:pointer;font-size:11px;color:var(--text-secondary);font-family:inherit;transition:all .12s}
+.fbtn:hover{background:var(--bg-secondary)}
+.fbtn.active{background:var(--bg-secondary);color:var(--text-primary);font-weight:500;border-color:var(--border-mid)}
+.addbtn{display:inline-flex;align-items:center;gap:4px;padding:6px 13px;border-radius:var(--radius-md);border:0.5px solid var(--border-mid);background:transparent;cursor:pointer;font-size:12px;color:var(--text-primary);font-family:inherit;transition:all .12s}
+.addbtn:hover{background:var(--bg-secondary)}
+.form-panel{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:20px;margin-bottom:18px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fl{font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.06em}
+.full{grid-column:1/-1}
+.factions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;grid-column:1/-1}
+.profit-pos{color:#2d7a5a}
+.profit-neg{color:#c0392b}
+.dim{opacity:.45}
+.cat-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+select,input[type=text],input[type=number],input[type=date]{
+  width:100%;padding:7px 10px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);
+  background:var(--bg-primary);color:var(--text-primary);font-family:inherit;font-size:13px;outline:none;
+}
+select:focus,input:focus{border-color:#D85A30;box-shadow:0 0 0 2px rgba(216,90,48,0.12)}
+input[type=checkbox]{width:auto;accent-color:#D85A30}
+@media(max-width:700px){
+  .layout{flex-direction:column}
+  .sidebar{width:100%;flex-direction:row;flex-wrap:wrap;padding:10px}
+  .logo{border-bottom:none;padding-bottom:0;margin-bottom:0}
+  .nav-item{border-left:none;border-bottom:2px solid transparent;padding:6px 10px}
+  .nav-item.active{border-bottom-color:#D85A30;border-left:none}
+  .main{padding:16px}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .apt-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .factions{grid-column:auto}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo}=React;
+
+const BOOKINGS=[
+  {id:1,apt:'Rebekka',checkIn:'2026-06-28',checkOut:'2026-07-04',nights:6, platform:'Booking',gross:716.83,commission:119.04,net:597.79},
+  {id:2,apt:'Rebekka',checkIn:'2026-07-17',checkOut:'2026-07-20',nights:3, platform:'Booking',gross:286.73,commission:47.62, net:239.11},
+  {id:3,apt:'Rebekka',checkIn:'2026-07-26',checkOut:'2026-07-30',nights:4, platform:'Booking',gross:497.80,commission:82.67, net:415.13},
+  {id:4,apt:'Rebekka',checkIn:'2026-08-25',checkOut:'2026-09-01',nights:7, platform:'Booking',gross:805.64,commission:133.79,net:671.85},
+  {id:5,apt:'Back',   checkIn:'2026-07-06',checkOut:'2026-07-20',nights:14,platform:'Friends',gross:700,   commission:0,     net:700},
+  {id:6,apt:'Back',   checkIn:'2026-08-19',checkOut:'2026-08-23',nights:4, platform:'Booking',gross:257.26,commission:42.72, net:214.54},
+  {id:7,apt:'Back',   checkIn:'2026-08-29',checkOut:'2026-09-06',nights:8, platform:'Booking',gross:744.70,commission:123.67,net:621.03},
+];
+const EXPENSES=[
+  {id:1, apt:'Rebekka',room:'Bathroom',  cat:'Appliances',item:'Washing Machine',  qty:1, cost:349,  total:349,   paid:false},
+  {id:2, apt:'Rebekka',room:'Bedroom',   cat:'Linens',    item:'Pillowcases',       qty:16,cost:2.10, total:33.6,  paid:true},
+  {id:3, apt:'Rebekka',room:'Bedroom',   cat:'Linens',    item:'Bed sheets (big)',  qty:8, cost:9.50, total:76,    paid:true},
+  {id:4, apt:'Rebekka',room:'Bedroom',   cat:'Linens',    item:'Bed sheets (small)',qty:8, cost:15.37,total:122.96,paid:true},
+  {id:5, apt:'Rebekka',room:'Bedroom',   cat:'Linens',    item:'Towels',            qty:12,cost:9.50, total:114,   paid:true},
+  {id:6, apt:'Rebekka',room:'Bedroom',   cat:'Linens',    item:'Mattress protector',qty:1, cost:39.06,total:39.06, paid:true},
+  {id:7, apt:'Rebekka',room:'Kitchen',   cat:'Appliances',item:'Kettle',            qty:1, cost:9,    total:9,     paid:true},
+  {id:8, apt:'Rebekka',room:'Kitchen',   cat:'Appliances',item:'Coffee maker',      qty:1, cost:20,   total:20,    paid:true},
+  {id:9, apt:'Rebekka',room:'Kitchen',   cat:'Appliances',item:'Toaster',           qty:1, cost:16,   total:16,    paid:true},
+  {id:10,apt:'Rebekka',room:'Bathroom',  cat:'Appliances',item:'Hair drier',        qty:1, cost:30,   total:30,    paid:true},
+  {id:11,apt:'Rebekka',room:'Kitchen',   cat:'Utilities', item:'Frying pan',        qty:1, cost:99,   total:99,    paid:true},
+  {id:12,apt:'Rebekka',room:'Bathroom',  cat:'Utilities', item:'Shampoo bottles',   qty:1, cost:15,   total:15,    paid:true},
+  {id:13,apt:'Rebekka',room:'Livingroom',cat:'Furniture', item:'Chairs',            qty:1, cost:240,  total:240,   paid:true},
+  {id:14,apt:'Back',   room:'Bathroom',  cat:'Appliances',item:'Washing machine',   qty:1, cost:350,  total:350,   paid:true},
+  {id:15,apt:'Back',   room:'Bedroom',   cat:'Linens',    item:'Pillowcases',        qty:16,cost:2.10, total:33.6,  paid:false},
+  {id:16,apt:'Back',   room:'Bedroom',   cat:'Linens',    item:'Bed sheets (big)',   qty:8, cost:9.50, total:76,    paid:false},
+  {id:17,apt:'Back',   room:'Bedroom',   cat:'Linens',    item:'Bed sheets (small)', qty:8, cost:15.37,total:122.96,paid:false},
+  {id:18,apt:'Back',   room:'Bedroom',   cat:'Linens',    item:'Towels',             qty:12,cost:9.50, total:114,   paid:false},
+  {id:19,apt:'Back',   room:'Bedroom',   cat:'Linens',    item:'Mattress protector', qty:1, cost:32.80,total:32.80, paid:true},
+  {id:20,apt:'Back',   room:'Kitchen',   cat:'Utilities', item:'Cutlery set',        qty:3, cost:8,    total:24,    paid:false},
+  {id:21,apt:'Back',   room:'Kitchen',   cat:'Utilities', item:'Glasses',            qty:6, cost:5,    total:30,    paid:false},
+  {id:22,apt:'Back',   room:'Kitchen',   cat:'Utilities', item:'Plates',             qty:6, cost:6.50, total:39,    paid:false},
+  {id:23,apt:'Back',   room:'Kitchen',   cat:'Appliances',item:'Kettle',             qty:1, cost:10,   total:10,    paid:false},
+  {id:24,apt:'Back',   room:'Kitchen',   cat:'Appliances',item:'Coffee maker',        qty:1, cost:20,   total:20,    paid:true},
+  {id:25,apt:'Back',   room:'Kitchen',   cat:'Appliances',item:'Toaster',            qty:1, cost:16,   total:16,    paid:false},
+  {id:26,apt:'Back',   room:'Livingroom',cat:'Furniture', item:'Sofa',               qty:1, cost:1500, total:1500,  paid:true},
+  {id:27,apt:'Back',   room:'Outside',   cat:'Furniture', item:'Outdoor chairs',     qty:1, cost:0,    total:0,     paid:false},
+  {id:28,apt:'General',room:'Outside',   cat:'Internet',  item:'Starlink',           qty:1, cost:30,   total:30,    paid:true},
+];
+
+const PLT={Booking:'#1a3f6f',Airbnb:'#c0392b',Friends:'#2d7a5a','Face-Face':'#8c6d20'};
+const fmt=n=>`€${parseFloat(n).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+const fmtD=s=>new Date(s+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+const today=new Date().toISOString().slice(0,10);
+
+function App(){
+  const[tab,setTab]=useState('dashboard');
+  const[bookings,setBookings]=useState(BOOKINGS);
+  const[expenses,setExpenses]=useState(EXPENSES);
+  const[apt,setApt]=useState('All');
+  const[form,setForm]=useState(null);
+  const[bF,setBF]=useState({apt:'Rebekka',checkIn:'',checkOut:'',platform:'Booking',gross:'',commission:''});
+  const[eF,setEF]=useState({apt:'Rebekka',room:'Kitchen',cat:'Appliances',item:'',qty:1,cost:'',paid:false});
+
+  const stats=useMemo(()=>{
+    const c=a=>{
+      const bk=bookings.filter(b=>b.apt===a);
+      const ex=expenses.filter(e=>e.apt===a);
+      return{
+        revenue:bk.reduce((s,b)=>s+b.net,0),
+        expenses:ex.reduce((s,e)=>s+e.total,0),
+        nights:bk.reduce((s,b)=>s+b.nights,0),
+        count:bk.length,
+        get profit(){return this.revenue-this.expenses}
+      };
+    };
+    return{R:c('Rebekka'),B:c('Back')};
+  },[bookings,expenses]);
+
+  const totalRev=stats.R.revenue+stats.B.revenue;
+  const totalProfit=stats.R.profit+stats.B.profit;
+  const totalNights=stats.R.nights+stats.B.nights;
+  const upcoming=bookings.filter(b=>b.checkIn>=today).sort((a,b)=>a.checkIn.localeCompare(b.checkIn));
+
+  const addBooking=()=>{
+    if(!bF.checkIn||!bF.checkOut||!bF.gross)return;
+    const nights=Math.round((new Date(bF.checkOut)-new Date(bF.checkIn))/86400000);
+    const gross=parseFloat(bF.gross)||0,commission=parseFloat(bF.commission)||0;
+    setBookings(p=>[...p,{id:Date.now(),...bF,nights,gross,commission,net:gross-commission}]);
+    setBF({apt:'Rebekka',checkIn:'',checkOut:'',platform:'Booking',gross:'',commission:''});
+    setForm(null);
+  };
+  const addExpense=()=>{
+    if(!eF.item)return;
+    const qty=parseInt(eF.qty)||1,cost=parseFloat(eF.cost)||0;
+    setExpenses(p=>[...p,{id:Date.now(),...eF,qty,cost,total:qty*cost}]);
+    setEF({apt:'Rebekka',room:'Kitchen',cat:'Appliances',item:'',qty:1,cost:'',paid:false});
+    setForm(null);
+  };
+  const nav=t=>{setTab(t);setForm(null);setApt('All')};
+
+  const AptBadge=({a})=><span className="badge" style={{background:a==='Rebekka'?'#1a3f6f':a==='Back'?'#3B6D11':'#5f5e5a',color:'#fff'}}>{a}</span>;
+  const PlatBadge=({p})=><span className="badge" style={{background:PLT[p]||'#888',color:'#fff'}}>{p}</span>;
+
+  return(
+    <div className="layout">
+      <div className="sidebar">
+        <div className="logo">
+          <div className="logo-name">Aegean Host</div>
+          <div className="logo-sub">Property Manager</div>
+        </div>
+        {[['dashboard','Dashboard'],['bookings','Bookings'],['expenses','Expenses']].map(([k,l])=>(
+          <div key={k} className={`nav-item${tab===k?' active':''}`} onClick={()=>nav(k)}>{l}</div>
+        ))}
+        <div className="sidebar-foot">2 properties · 2026</div>
+      </div>
+
+      <div className="main">
+
+        {tab==='dashboard'&&<>
+          <div className="page-title">Overview</div>
+          <div className="page-sub">Season 2026 · both properties</div>
+          <div className="kpi-grid">
+            <div className="kpi">
+              <div className="kpi-label">Total revenue</div>
+              <div className="kpi-value">{fmt(totalRev)}</div>
+              <div className="kpi-sub">net after commissions</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">Net profit</div>
+              <div className={`kpi-value ${totalProfit>=0?'profit-pos':'profit-neg'}`}>{fmt(totalProfit)}</div>
+              <div className="kpi-sub">revenue – expenses</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">Total nights</div>
+              <div className="kpi-value">{totalNights}</div>
+              <div className="kpi-sub">{bookings.length} bookings total</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">Avg / night</div>
+              <div className="kpi-value">{totalNights?fmt(totalRev/totalNights):'€0'}</div>
+              <div className="kpi-sub">blended net rate</div>
+            </div>
+          </div>
+          <div className="apt-grid">
+            {[['Rebekka',"Rebekka's apartment",stats.R],['Back',"Back's apartment",stats.B]].map(([a,label,s])=>(
+              <div key={a} className="card">
+                <div className="card-header">
+                  <div className="card-title">{label}</div>
+                  <div className="card-meta">{s.count} stays · {s.nights} nights</div>
+                </div>
+                <div className="apt-stats">
+                  {[['Revenue',s.revenue,''],['Expenses',s.expenses,''],['Profit',s.profit,s.profit>=0?'profit-pos':'profit-neg']].map(([l,v,c])=>(
+                    <div key={l}><div className="stat-label">{l}</div><div className={`stat-val ${c}`}>{fmt(v)}</div></div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="card">
+            <div className="section-title">Upcoming stays</div>
+            {upcoming.length===0
+              ?<div style={{fontSize:12,color:'var(--text-tertiary)'}}>No upcoming bookings yet.</div>
+              :<table>
+                <thead><tr>{['Property','Check-in','Check-out','Nights','Platform','Net'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+                <tbody>
+                  {upcoming.map(b=>(
+                    <tr key={b.id}>
+                      <td><AptBadge a={b.apt}/></td>
+                      <td>{fmtD(b.checkIn)}</td>
+                      <td>{fmtD(b.checkOut)}</td>
+                      <td>{b.nights}</td>
+                      <td><PlatBadge p={b.platform}/></td>
+                      <td style={{fontWeight:500}}>{fmt(b.net)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            }
+          </div>
+        </>}
+
+        {tab==='bookings'&&<>
+          <div className="hrow">
+            <div><div className="page-title">Bookings</div><div className="page-sub">All reservations · season 2026</div></div>
+            <button className="addbtn" onClick={()=>setForm(form==='booking'?null:'booking')}>+ Add booking</button>
+          </div>
+          {form==='booking'&&<div className="form-panel">
+            <div style={{fontSize:13,fontWeight:500,marginBottom:14,color:'var(--text-primary)'}}>New booking</div>
+            <div className="form-grid">
+              <div className="fg full"><label className="fl">Property</label>
+                <select value={bF.apt} onChange={e=>setBF(p=>({...p,apt:e.target.value}))}>
+                  <option>Rebekka</option><option>Back</option>
+                </select>
+              </div>
+              <div className="fg"><label className="fl">Check-in</label><input type="date" value={bF.checkIn} onChange={e=>setBF(p=>({...p,checkIn:e.target.value}))}/></div>
+              <div className="fg"><label className="fl">Check-out</label><input type="date" value={bF.checkOut} onChange={e=>setBF(p=>({...p,checkOut:e.target.value}))}/></div>
+              <div className="fg"><label className="fl">Platform</label>
+                <select value={bF.platform} onChange={e=>setBF(p=>({...p,platform:e.target.value}))}>
+                  <option>Booking</option><option>Airbnb</option><option>Friends</option><option>Face-Face</option>
+                </select>
+              </div>
+              <div className="fg"><label className="fl">Gross (€)</label><input type="number" placeholder="0.00" value={bF.gross} onChange={e=>setBF(p=>({...p,gross:e.target.value}))}/></div>
+              <div className="fg full"><label className="fl">Commission (€)</label><input type="number" placeholder="0.00" value={bF.commission} onChange={e=>setBF(p=>({...p,commission:e.target.value}))}/></div>
+              <div className="factions">
+                <button className="addbtn" onClick={()=>setForm(null)}>Cancel</button>
+                <button className="addbtn" onClick={addBooking} style={{fontWeight:500}}>Save booking</button>
+              </div>
+            </div>
+          </div>}
+          <div className="frow">
+            {['All','Rebekka','Back'].map(a=><button key={a} className={`fbtn${apt===a?' active':''}`} onClick={()=>setApt(a)}>{a}</button>)}
+          </div>
+          <div className="card">
+            <table>
+              <thead><tr>{['Property','Check-in','Check-out','Nights','Platform','Gross','Commission','Net'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+              <tbody>
+                {bookings.filter(b=>apt==='All'||b.apt===apt).sort((a,b)=>a.checkIn.localeCompare(b.checkIn)).map(b=>(
+                  <tr key={b.id} className={b.checkOut<today?'dim':''}>
+                    <td><AptBadge a={b.apt}/></td>
+                    <td>{fmtD(b.checkIn)}</td>
+                    <td>{fmtD(b.checkOut)}</td>
+                    <td>{b.nights}</td>
+                    <td><PlatBadge p={b.platform}/></td>
+                    <td>{fmt(b.gross)}</td>
+                    <td style={{color:'#c0392b'}}>{b.commission>0?`-${fmt(b.commission)}`:'—'}</td>
+                    <td style={{fontWeight:500}}>{fmt(b.net)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>}
+
+        {tab==='expenses'&&<>
+          <div className="hrow">
+            <div><div className="page-title">Expenses</div><div className="page-sub">Equipment & purchases per property</div></div>
+            <button className="addbtn" onClick={()=>setForm(form==='expense'?null:'expense')}>+ Add expense</button>
+          </div>
+          {form==='expense'&&<div className="form-panel">
+            <div style={{fontSize:13,fontWeight:500,marginBottom:14,color:'var(--text-primary)'}}>New expense</div>
+            <div className="form-grid">
+              <div className="fg"><label className="fl">Property</label>
+                <select value={eF.apt} onChange={e=>setEF(p=>({...p,apt:e.target.value}))}>
+                  <option>Rebekka</option><option>Back</option><option>General</option>
+                </select>
+              </div>
+              <div className="fg"><label className="fl">Room</label>
+                <select value={eF.room} onChange={e=>setEF(p=>({...p,room:e.target.value}))}>
+                  {['Kitchen','Bathroom','Bedroom','Livingroom','Outside'].map(r=><option key={r}>{r}</option>)}
+                </select>
+              </div>
+              <div className="fg"><label className="fl">Category</label>
+                <select value={eF.cat} onChange={e=>setEF(p=>({...p,cat:e.target.value}))}>
+                  {['Appliances','Furniture','Linens','Utilities','Internet'].map(c=><option key={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="fg"><label className="fl">Item name</label><input type="text" placeholder="e.g. Iron" value={eF.item} onChange={e=>setEF(p=>({...p,item:e.target.value}))}/></div>
+              <div className="fg"><label className="fl">Quantity</label><input type="number" min="1" value={eF.qty} onChange={e=>setEF(p=>({...p,qty:e.target.value}))}/></div>
+              <div className="fg"><label className="fl">Cost / unit (€)</label><input type="number" placeholder="0.00" value={eF.cost} onChange={e=>setEF(p=>({...p,cost:e.target.value}))}/></div>
+              <div className="fg full" style={{flexDirection:'row',alignItems:'center',gap:8}}>
+                <input type="checkbox" id="pc" checked={eF.paid} onChange={e=>setEF(p=>({...p,paid:e.target.checked}))}/>
+                <label htmlFor="pc" style={{fontSize:13,cursor:'pointer',color:'var(--text-primary)'}}>Already paid</label>
+              </div>
+              <div className="factions">
+                <button className="addbtn" onClick={()=>setForm(null)}>Cancel</button>
+                <button className="addbtn" onClick={addExpense} style={{fontWeight:500}}>Save expense</button>
+              </div>
+            </div>
+          </div>}
+          <div className="frow">
+            {['All','Rebekka','Back','General'].map(a=><button key={a} className={`fbtn${apt===a?' active':''}`} onClick={()=>setApt(a)}>{a}</button>)}
+          </div>
+          {apt!=='All'&&<div className="cat-row">
+            {['Furniture','Appliances','Linens','Utilities','Internet'].map(cat=>{
+              const total=expenses.filter(e=>(apt==='All'||e.apt===apt)&&e.cat===cat).reduce((s,e)=>s+e.total,0);
+              return total>0?<div key={cat} className="kpi" style={{flex:'0 0 auto',minWidth:110}}>
+                <div className="kpi-label">{cat}</div>
+                <div className="kpi-value" style={{fontSize:15}}>{fmt(total)}</div>
+              </div>:null;
+            })}
+          </div>}
+          <div className="card">
+            <table>
+              <thead><tr>{['Property','Room','Category','Item','Qty','Cost/unit','Total','Paid'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+              <tbody>
+                {expenses.filter(e=>apt==='All'||e.apt===apt).map(e=>(
+                  <tr key={e.id}>
+                    <td><AptBadge a={e.apt}/></td>
+                    <td style={{color:'var(--text-secondary)'}}>{e.room}</td>
+                    <td style={{color:'var(--text-secondary)'}}>{e.cat}</td>
+                    <td style={{fontWeight:500}}>{e.item}</td>
+                    <td>{e.qty}</td>
+                    <td>{e.cost>0?fmt(e.cost):'—'}</td>
+                    <td style={{fontWeight:500}}>{e.total>0?fmt(e.total):'—'}</td>
+                    <td><span className="dot" style={{background:e.paid?'#2d7a5a':'#D85A30'}}/>{e.paid?'Paid':'Pending'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>}
+
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
