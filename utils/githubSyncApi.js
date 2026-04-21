@@ -90,9 +90,14 @@
       if (!branch) return null;
       cfg.branch = branch.trim();
     }
-    // Do not prompt for a token in the browser. The server will use a
-    // server-side GITHUB_TOKEN to perform GitHub writes, so keep token empty.
-    cfg.token = "";
+    if (!cfg.token) {
+      const token = window.prompt(
+        "GitHub token with contents write access:",
+        "",
+      );
+      if (!token) return null;
+      cfg.token = token.trim();
+    }
     saveGitHubConfig(cfg);
     return cfg;
   }
@@ -182,36 +187,51 @@
   }
 
   async function githubFetchFileMeta(cfg, path) {
-    // Proxy the metadata request through the local server which uses the
-    // server-side token. This avoids keeping secrets in the browser.
-    const params = new URLSearchParams({
-      owner: cfg.owner,
-      repo: cfg.repo,
-      branch: cfg.branch || "main",
-      path,
-    });
-    const url = `${LOCAL_API_ORIGIN}/api/github/metadata?${params.toString()}`;
+    const repo = `${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`;
+    const apiPath = encodeGitHubPath(path);
+    const url = `https://api.github.com/repos/${repo}/contents/${apiPath}?ref=${encodeURIComponent(cfg.branch)}`;
     const res = await originalFetch(url, {
-      headers: { Accept: "application/json" },
+      headers: {
+        Authorization: `Bearer ${cfg.token}`,
+        Accept: "application/vnd.github+json",
+      },
     });
     if (!res.ok) {
-      const message = await readErrorMessage(res, `GitHub read failed (${res.status})`);
+      const message = await readErrorMessage(
+        res,
+        `GitHub read failed (${res.status})`,
+      );
       throw new Error(message);
     }
     return res.json();
   }
 
   async function githubWriteJson(cfg, path, data, message) {
-    // Use the server proxy to perform writes with the server-side token.
-    const url = `${LOCAL_API_ORIGIN}/api/github/write`;
-    const body = { owner: cfg.owner, repo: cfg.repo, branch: cfg.branch || "main", path, data, message };
-    const res = await originalFetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const meta = await githubFetchFileMeta(cfg, path);
+    const repo = `${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`;
+    const apiPath = encodeGitHubPath(path);
+    const res = await originalFetch(
+      `https://api.github.com/repos/${repo}/contents/${apiPath}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${cfg.token}`,
+          Accept: "application/vnd.github+json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+          content: toBase64Utf8(`${JSON.stringify(data, null, 2)}\n`),
+          sha: meta.sha,
+          branch: cfg.branch,
+        }),
+      },
+    );
     if (!res.ok) {
-      const messageText = await readErrorMessage(res, `GitHub write failed (${res.status})`);
+      const messageText = await readErrorMessage(
+        res,
+        `GitHub write failed (${res.status})`,
+      );
       throw new Error(messageText);
     }
   }

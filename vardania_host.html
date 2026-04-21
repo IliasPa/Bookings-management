@@ -15,25 +15,6 @@
     <!-- Recharts UMD (CDN fallback) -->
     <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
     <!-- API fallback: when localhost API is unavailable, sync JSON through GitHub API -->
-    <script>
-      (function () {
-        try {
-          var key = "vardania.githubSync";
-          if (!localStorage.getItem(key)) {
-            localStorage.setItem(
-              key,
-              JSON.stringify({
-                owner: "IliasPa",
-                repo: "Bookings-management",
-                branch: "main",
-                token: "",
-              }),
-            );
-          }
-          window.DEFAULT_GITHUB_TOKEN = "";
-        } catch (e) {}
-      })();
-    </script>
     <script src="utils/githubSyncApi.js"></script>
     <!-- Chart data helpers -->
     <script src="utils/chartData.js"></script>

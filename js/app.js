@@ -343,7 +343,8 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
     owner: "IliasPa",
     repo: "Bookings-management",
     branch: "main",
-    token: "",
+    token:
+      "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",
   });
   useEffect(() => {
     try {
@@ -354,7 +355,9 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
           owner: parsed.owner || "IliasPa",
           repo: parsed.repo || "Bookings-management",
           branch: parsed.branch || "main",
-            token: parsed.token || "",
+          token:
+            parsed.token ||
+            "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",
         });
       }
     } catch (e) {}
@@ -377,7 +380,8 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
         owner: "IliasPa",
         repo: "Bookings-management",
         branch: "main",
-        token: "",
+        token:
+          "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",
       });
       alert("GitHub sync config cleared.");
     } catch (e) {

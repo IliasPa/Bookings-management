@@ -2,8 +2,6 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs").promises;
 const cors = require("cors");
-const https = require("https");
-require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 app.use(cors());
@@ -243,104 +241,6 @@ app.post("/api/deleted/expenses/:id/restore", async (req, res) => {
 
 // serve static files from project root (one level up)
 app.use(express.static(path.join(__dirname, "..")));
-
-// --- GitHub proxy endpoints (use server-side GITHUB_TOKEN) ---
-function ghApiRequest(method, apiPath, body) {
-  return new Promise((resolve, reject) => {
-    const token = process.env.GITHUB_TOKEN;
-    if (!token) return reject(new Error("GITHUB_TOKEN not configured on server"));
-    const options = {
-      hostname: "api.github.com",
-      port: 443,
-      path: apiPath,
-      method,
-      headers: {
-        "User-Agent": "vardania-host-server",
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    const req = https.request(options, (res) => {
-      let data = "";
-      res.setEncoding("utf8");
-      res.on("data", (chunk) => (data += chunk));
-      res.on("end", () => {
-        const status = res.statusCode;
-        try {
-          const parsed = data ? JSON.parse(data) : {};
-          if (status >= 200 && status < 300) return resolve(parsed);
-          return reject({ status, body: parsed });
-        } catch (e) {
-          if (status >= 200 && status < 300) return resolve(data);
-          return reject({ status, body: data });
-        }
-      });
-    });
-
-    req.on("error", (err) => reject(err));
-
-    if (body) {
-      const s = JSON.stringify(body);
-      req.setHeader("Content-Type", "application/json");
-      req.setHeader("Content-Length", Buffer.byteLength(s));
-      req.write(s);
-    }
-    req.end();
-  });
-}
-
-function encodeGitHubPath(p) {
-  return p.split("/").map(encodeURIComponent).join("/");
-}
-
-app.get("/api/github/metadata", async (req, res) => {
-  try {
-    const { owner, repo, branch = "main", path: filePath } = req.query;
-    if (!owner || !repo || !filePath) return res.status(400).json({ error: "Missing parameters" });
-    const encodedPath = encodeGitHubPath(filePath);
-    const apiPath = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${encodedPath}?ref=${encodeURIComponent(branch)}`;
-    const meta = await ghApiRequest("GET", apiPath);
-    res.json(meta);
-  } catch (err) {
-    console.error("GitHub metadata error:", err);
-    if (err && err.status) return res.status(err.status).json(err.body || { error: "GitHub error" });
-    return res.status(500).json({ error: err && err.message ? err.message : "GitHub metadata error" });
-  }
-});
-
-app.post("/api/github/write", async (req, res) => {
-  try {
-    const { owner, repo, branch = "main", path: filePath, data, message } = req.body;
-    if (!owner || !repo || !filePath || typeof data === "undefined" || !message) {
-      return res.status(400).json({ error: "Missing parameters" });
-    }
-    const encodedPath = encodeGitHubPath(filePath);
-    let sha;
-    try {
-      const meta = await ghApiRequest(
-        "GET",
-        `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${encodedPath}?ref=${encodeURIComponent(branch)}`,
-      );
-      sha = meta && meta.sha;
-    } catch (e) {
-      if (!e || e.status !== 404) throw e;
-    }
-    const content = Buffer.from(JSON.stringify(data, null, 2) + "\n", "utf8").toString("base64");
-    const body = { message, content, branch };
-    if (sha) body.sha = sha;
-    const result = await ghApiRequest(
-      "PUT",
-      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${encodedPath}`,
-      body,
-    );
-    res.json(result);
-  } catch (err) {
-    console.error("GitHub write error:", err);
-    if (err && err.status) return res.status(err.status).json(err.body || { error: "GitHub error" });
-    return res.status(500).json({ error: err && err.message ? err.message : "GitHub write error" });
-  }
-});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () =>
