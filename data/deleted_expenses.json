@@ -1,0 +1,13 @@
+[
+  {
+    "id": 7,
+    "apt": "Rebekka",
+    "room": "Kitchen",
+    "cat": "Appliances",
+    "item": "Kettle",
+    "qty": 1,
+    "cost": 9,
+    "total": 9,
+    "paid": true
+  }
+]

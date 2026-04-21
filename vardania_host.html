@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vardania Host — Property Manager</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Recharts UMD (CDN fallback) -->
+    <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+    <!-- API fallback: when localhost API is unavailable, sync JSON through GitHub API -->
+    <script>
+      (function () {
+        try {
+          var key = "vardania.githubSync";
+          if (!localStorage.getItem(key)) {
+            localStorage.setItem(
+              key,
+              JSON.stringify({
+                owner: "IliasPa",
+                repo: "Bookings-management",
+                branch: "main",
+                token: "",
+              }),
+            );
+          }
+          window.DEFAULT_GITHUB_TOKEN = "";
+        } catch (e) {}
+      })();
+    </script>
+    <script src="utils/githubSyncApi.js"></script>
+    <!-- Chart data helpers -->
+    <script src="utils/chartData.js"></script>
+    <!-- Charts component (JSX) -->
+    <script type="text/babel" src="charts/Charts.jsx"></script>
+    <script type="text/babel" src="js/app.js"></script>
+  </body>
+</html>

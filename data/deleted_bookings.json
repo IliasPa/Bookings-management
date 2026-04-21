@@ -1,0 +1,13 @@
+[
+  {
+    "id": 8,
+    "apt": "Rebekka",
+    "checkIn": "2026-12-03",
+    "checkOut": "2026-12-04",
+    "platform": "Booking",
+    "gross": 1101.11,
+    "commission": 11.11,
+    "nights": 1,
+    "net": 1090
+  }
+]

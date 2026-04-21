@@ -1,0 +1,112 @@
+[
+  {
+    "id": 4,
+    "apt": "Rebekka",
+    "checkIn": "2026-08-25",
+    "checkOut": "2026-09-01",
+    "nights": 7,
+    "platform": "Booking",
+    "gross": 850.64,
+    "commission": 133.79,
+    "net": 716.85
+  },
+  {
+    "id": 6,
+    "apt": "Back",
+    "checkIn": "2026-08-19",
+    "checkOut": "2026-08-23",
+    "nights": 4,
+    "platform": "Booking",
+    "gross": 257.26,
+    "commission": 42.72,
+    "net": 214.54
+  },
+  {
+    "id": 7,
+    "apt": "Back",
+    "checkIn": "2026-08-29",
+    "checkOut": "2026-09-06",
+    "nights": 8,
+    "platform": "Booking",
+    "gross": 744.7,
+    "commission": 123.67,
+    "net": 621.03
+  },
+  {
+    "id": 5,
+    "apt": "Back",
+    "checkIn": "2026-07-06",
+    "checkOut": "2026-07-20",
+    "nights": 14,
+    "platform": "Friends",
+    "gross": 700,
+    "commission": 0,
+    "net": 700
+  },
+  {
+    "id": 2,
+    "apt": "Rebekka",
+    "checkIn": "2026-07-17",
+    "checkOut": "2026-07-20",
+    "nights": 3,
+    "platform": "Booking",
+    "gross": 286.73,
+    "commission": 47.62,
+    "net": 239.11
+  },
+  {
+    "id": 9,
+    "checkIn": "2026-10-01",
+    "checkOut": "2026-10-02",
+    "gross": 200,
+    "apt": "Test",
+    "commission": 10,
+    "platform": "Booking",
+    "nights": 1,
+    "net": 190
+  },
+  {
+    "id": 3,
+    "apt": "Rebekka",
+    "checkIn": "2026-07-26",
+    "checkOut": "2026-07-30",
+    "nights": 4,
+    "platform": "Booking",
+    "gross": 497.8,
+    "commission": 82.67,
+    "net": 415.13
+  },
+  {
+    "id": 1,
+    "apt": "Rebekka",
+    "checkIn": "2026-06-28",
+    "checkOut": "2026-07-04",
+    "nights": 6,
+    "platform": "Booking",
+    "gross": 111.11,
+    "commission": 119.04,
+    "net": -7.930000000000007
+  },
+  {
+    "id": 10,
+    "apt": "Rebekka",
+    "checkIn": "2026-04-22",
+    "checkOut": "2026-04-23",
+    "platform": "Booking",
+    "gross": 123,
+    "commission": 2,
+    "nights": 1,
+    "net": 121
+  },
+  {
+    "id": 11,
+    "apt": "Rebekka",
+    "checkIn": "2026-04-20",
+    "checkOut": "2026-04-21",
+    "platform": "Booking",
+    "gross": 123,
+    "commission": 123,
+    "nights": 1,
+    "net": 0
+  }
+]
