@@ -6,8 +6,8 @@
     "cat": "Appliances",
     "item": "Coffee maker",
     "qty": 1,
-    "cost": 2000,
-    "total": 2000,
+    "cost": 20000,
+    "total": 20000,
     "paid": true
   },
   {
