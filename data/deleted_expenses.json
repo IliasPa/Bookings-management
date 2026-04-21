@@ -1,24 +1,13 @@
 [
   {
-    "id": 7,
+    "id": 9,
     "apt": "Rebekka",
     "room": "Kitchen",
     "cat": "Appliances",
-    "item": "Kettle",
+    "item": "Toaster",
     "qty": 1,
-    "cost": 9,
-    "total": 9,
-    "paid": true
-  },
-  {
-    "id": 6,
-    "apt": "Rebekka",
-    "room": "Bedroom",
-    "cat": "Linens",
-    "item": "Mattress protector",
-    "qty": 1,
-    "cost": 390.06,
-    "total": 390.06,
+    "cost": 16,
+    "total": 16,
     "paid": true
   }
 ]

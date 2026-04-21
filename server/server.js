@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require("express");
 const path = require("path");
 const fs = require("fs").promises;
+const fsSync = require("fs");
 const cors = require("cors");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
@@ -11,6 +12,43 @@ app.use(cors());
 app.use(express.json());
 
 const DATA_DIR = path.join(__dirname, "..", "data");
+
+async function ensureDataFiles() {
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+  } catch (err) {
+    console.error("Failed to create data dir:", err);
+  }
+  const files = [
+    "bookings.json",
+    "expenses.json",
+    "deleted_bookings.json",
+    "deleted_expenses.json",
+    "apartments.json",
+  ];
+  for (const name of files) {
+    const p = path.join(DATA_DIR, name);
+    try {
+      await fs.access(p);
+      // ensure valid JSON; don't overwrite valid non-array JSON silently
+      try {
+        const txt = await fs.readFile(p, "utf8");
+        JSON.parse(txt || "");
+      } catch (err) {
+        console.warn(`Initializing corrupt or empty file ${name}`);
+        await fs.writeFile(p, "[]", "utf8");
+      }
+    } catch (err) {
+      // missing - create empty array
+      try {
+        await fs.writeFile(p, "[]", "utf8");
+        console.log(`Created missing data file: ${name}`);
+      } catch (werr) {
+        console.error(`Failed to create ${name}:`, werr);
+      }
+    }
+  }
+}
 
 async function readJson(name) {
   const p = path.join(DATA_DIR, name);
@@ -41,14 +79,36 @@ async function writeJson(name, data) {
 async function commitAndPush(fileRelPath, message) {
   const repoRoot = path.join(__dirname, "..");
   const filePathForGit = fileRelPath.replace(/\\/g, "/");
+  const lockPath = path.join(repoRoot, ".git", "index.lock");
   try {
     await exec(`git add -- "${filePathForGit}"`, { cwd: repoRoot });
   } catch (err) {
-    console.error(
-      "git add failed:",
-      err && err.stderr ? err.stderr : err.message || err,
-    );
-    return;
+    const stderr = err && err.stderr ? err.stderr : err && err.message ? err.message : "";
+    // If a stale index.lock exists, try to remove it and retry once
+    if (fsSync.existsSync(lockPath) || /index.lock/.test(stderr)) {
+      try {
+        if (fsSync.existsSync(lockPath)) {
+          fsSync.unlinkSync(lockPath);
+          console.log("Removed stale git index.lock");
+        }
+      } catch (unlinkErr) {
+        console.error("Failed to remove stale git index.lock:", unlinkErr);
+        console.error("git add failed:", stderr);
+        return;
+      }
+      try {
+        await exec(`git add -- "${filePathForGit}"`, { cwd: repoRoot });
+      } catch (err2) {
+        console.error(
+          "git add failed after removing index.lock:",
+          err2 && err2.stderr ? err2.stderr : err2.message || err2,
+        );
+        return;
+      }
+    } else {
+      console.error("git add failed:", stderr);
+      return;
+    }
   }
 
   try {
@@ -63,18 +123,62 @@ async function commitAndPush(fileRelPath, message) {
     ) {
       return;
     }
-    console.error("git commit failed:", stderr);
-    return;
+    // If lock-related, try removing and retrying commit once
+    if (fsSync.existsSync(lockPath) || /index.lock/.test(stderr)) {
+      try {
+        if (fsSync.existsSync(lockPath)) {
+          fsSync.unlinkSync(lockPath);
+          console.log("Removed stale git index.lock before commit");
+        }
+      } catch (unlinkErr) {
+        console.error("Failed to remove stale git index.lock before commit:", unlinkErr);
+        console.error("git commit failed:", stderr);
+        return;
+      }
+      try {
+        await exec(`git commit -m "${safeMessage}"`, { cwd: repoRoot });
+      } catch (err2) {
+        console.error(
+          "git commit failed after removing index.lock:",
+          err2 && err2.stderr ? err2.stderr : err2.message || err2,
+        );
+        return;
+      }
+    } else {
+      console.error("git commit failed:", stderr);
+      return;
+    }
   }
 
   try {
     const branch = process.env.GITHUB_BRANCH || "main";
     await exec(`git push origin ${branch}`, { cwd: repoRoot });
   } catch (err) {
-    console.error(
-      "git push failed:",
-      err && err.stderr ? err.stderr : err.message || err,
-    );
+    const stderr = err && err.stderr ? err.stderr : err && err.message ? err.message : "";
+    if (fsSync.existsSync(lockPath) || /index.lock/.test(stderr)) {
+      try {
+        if (fsSync.existsSync(lockPath)) {
+          fsSync.unlinkSync(lockPath);
+          console.log("Removed stale git index.lock before push");
+        }
+      } catch (unlinkErr) {
+        console.error("Failed to remove stale git index.lock before push:", unlinkErr);
+        console.error("git push failed:", stderr);
+        return;
+      }
+      try {
+        const branch = process.env.GITHUB_BRANCH || "main";
+        await exec(`git push origin ${branch}`, { cwd: repoRoot });
+      } catch (err2) {
+        console.error(
+          "git push failed after removing index.lock:",
+          err2 && err2.stderr ? err2.stderr : err2.message || err2,
+        );
+        return;
+      }
+    } else {
+      console.error("git push failed:", stderr);
+    }
   }
 }
 
@@ -257,10 +361,13 @@ app.get("/api/deleted/expenses", async (req, res) => {
 app.post("/api/deleted/bookings/:id/restore", async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(`[restore booking] id=${id}`);
     const deleted = await readJsonSafe("deleted_bookings.json");
+    console.log(`[restore booking] deleted count=${Array.isArray(deleted)?deleted.length:0}`);
     const idx = deleted.findIndex((d) => String(d.id) === String(id));
     if (idx === -1) return res.status(404).json({ error: "Not found" });
     const item = deleted.splice(idx, 1)[0];
+    console.log(`[restore booking] found item id=${item && item.id}`);
     const bookings = await readJson("bookings.json");
     bookings.push(item);
     await writeJson("bookings.json", bookings);
@@ -275,10 +382,13 @@ app.post("/api/deleted/bookings/:id/restore", async (req, res) => {
 app.post("/api/deleted/expenses/:id/restore", async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(`[restore expense] id=${id}`);
     const deleted = await readJsonSafe("deleted_expenses.json");
+    console.log(`[restore expense] deleted count=${Array.isArray(deleted)?deleted.length:0}`);
     const idx = deleted.findIndex((d) => String(d.id) === String(id));
     if (idx === -1) return res.status(404).json({ error: "Not found" });
     const item = deleted.splice(idx, 1)[0];
+    console.log(`[restore expense] found item id=${item && item.id}`);
     const expenses = await readJson("expenses.json");
     expenses.push(item);
     await writeJson("expenses.json", expenses);
@@ -376,6 +486,13 @@ app.post("/api/github/write", async (req, res) => {
 app.use(express.static(path.join(__dirname, "..")));
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () =>
-  console.log(`Server listening on http://localhost:${PORT}`),
-);
+(async function start() {
+  try {
+    await ensureDataFiles();
+  } catch (err) {
+    console.error("Failed to ensure data files:", err);
+  }
+  app.listen(PORT, () =>
+    console.log(`Server listening on http://localhost:${PORT}`),
+  );
+})();
