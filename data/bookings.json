@@ -108,5 +108,12 @@
     "commission": 123,
     "nights": 1,
     "net": 0
+  },
+  {
+    "id": 12,
+    "guest": "test-client",
+    "gross": 10,
+    "commission": 0,
+    "net": 10
   }
 ]
