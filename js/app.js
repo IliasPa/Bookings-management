@@ -343,8 +343,6 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
     owner: "IliasPa",
     repo: "Bookings-management",
     branch: "main",
-    token:
-      "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",
   });
   useEffect(() => {
     try {
@@ -355,9 +353,6 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
           owner: parsed.owner || "IliasPa",
           repo: parsed.repo || "Bookings-management",
           branch: parsed.branch || "main",
-          token:
-            parsed.token ||
-            "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",
         });
       }
     } catch (e) {}
@@ -365,7 +360,9 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
 
   const saveGitHubSync = () => {
     try {
-      localStorage.setItem("vardania.githubSync", JSON.stringify(syncCfg));
+      // Persist only non-sensitive fields (owner, repo, branch)
+      const toSave = { owner: syncCfg.owner, repo: syncCfg.repo, branch: syncCfg.branch };
+      localStorage.setItem("vardania.githubSync", JSON.stringify(toSave));
       alert("GitHub sync config saved to localStorage.");
       setShowSync(false);
     } catch (e) {
@@ -380,8 +377,6 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
         owner: "IliasPa",
         repo: "Bookings-management",
         branch: "main",
-        token:
-          "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",
       });
       alert("GitHub sync config cleared.");
     } catch (e) {
@@ -690,14 +685,6 @@ function App({ initialBookings = [], initialExpenses = [], initialApts = [] }) {
                 value={syncCfg.branch}
                 onChange={(e) =>
                   setSyncCfg((s) => ({ ...s, branch: e.target.value }))
-                }
-              />
-              <label className="fl">Token</label>
-              <input
-                type="password"
-                value={syncCfg.token}
-                onChange={(e) =>
-                  setSyncCfg((s) => ({ ...s, token: e.target.value }))
                 }
               />
               <div style={{ display: "flex", gap: 8, marginTop: 8 }}>

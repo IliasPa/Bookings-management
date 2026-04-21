@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const path = require("path");
 const fs = require("fs").promises;
@@ -283,6 +284,88 @@ app.post("/api/deleted/expenses/:id/restore", async (req, res) => {
     await writeJson("expenses.json", expenses);
     await writeJson("deleted_expenses.json", deleted);
     res.json(item);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GitHub sync: return non-sensitive config and proxy GitHub file operations
+app.get("/api/config/github", async (req, res) => {
+  try {
+    const cfgPath = path.join(DATA_DIR, "github_sync.json");
+    let cfg = {};
+    try {
+      const txt = await fs.readFile(cfgPath, "utf8");
+      cfg = JSON.parse(txt || "{}");
+    } catch (err) {
+      cfg.owner = process.env.GITHUB_OWNER || "";
+      cfg.repo = process.env.GITHUB_REPO || "";
+      cfg.branch = process.env.GITHUB_BRANCH || "main";
+    }
+    return res.json({ owner: cfg.owner || "", repo: cfg.repo || "", branch: cfg.branch || "main" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/api/config/github", async (req, res) => {
+  try {
+    const { owner = "", repo = "", branch = "main" } = req.body || {};
+    const cfgPath = path.join(DATA_DIR, "github_sync.json");
+    await fs.writeFile(cfgPath, JSON.stringify({ owner, repo, branch }, null, 2), "utf8");
+    return res.json({ owner, repo, branch });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+const GITHUB_API = "https://api.github.com";
+
+app.post("/api/github/meta", async (req, res) => {
+  try {
+    const { owner, repo, branch = "main", path: filePath } = req.body || {};
+    if (!owner || !repo || !filePath) return res.status(400).json({ error: "Missing owner, repo or path" });
+    const apiPath = (filePath || "").split("/").map(encodeURIComponent).join("/");
+    const url = `${GITHUB_API}/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${apiPath}?ref=${encodeURIComponent(branch)}`;
+    const ghRes = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Accept: "application/vnd.github+json",
+      },
+    });
+    const payload = await ghRes.text();
+    res.status(ghRes.status).set({ 'content-type': ghRes.headers.get('content-type') || 'application/json' }).send(payload);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/api/github/write", async (req, res) => {
+  try {
+    const { owner, repo, branch = "main", path: filePath, data, message = "Update via webapp", sha } = req.body || {};
+    if (!owner || !repo || !filePath || typeof data === "undefined") {
+      return res.status(400).json({ error: "Missing owner, repo, path or data" });
+    }
+    const content = Buffer.from(JSON.stringify(data, null, 2) + "\n").toString("base64");
+    const apiPath = (filePath || "").split("/").map(encodeURIComponent).join("/");
+    const url = `${GITHUB_API}/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${apiPath}`;
+    const body = { message, content, branch };
+    if (sha) body.sha = sha;
+    const ghRes = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const payload = await ghRes.text();
+    res.status(ghRes.status).set({ 'content-type': ghRes.headers.get('content-type') || 'application/json' }).send(payload);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });

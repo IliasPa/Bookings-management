@@ -63,13 +63,14 @@
       owner: saved.owner || detected.owner || "",
       repo: saved.repo || detected.repo || "",
       branch: saved.branch || detected.branch || "main",
-      token: saved.token || "",
     };
   }
 
   function saveGitHubConfig(cfg) {
     try {
-      localStorage.setItem(GITHUB_SYNC_KEY, JSON.stringify(cfg));
+      // Ensure we never persist any token client-side
+      const toSave = { owner: cfg.owner || "", repo: cfg.repo || "", branch: cfg.branch || "main" };
+      localStorage.setItem(GITHUB_SYNC_KEY, JSON.stringify(toSave));
     } catch (err) {}
   }
 
@@ -90,14 +91,7 @@
       if (!branch) return null;
       cfg.branch = branch.trim();
     }
-    if (!cfg.token) {
-      const token = window.prompt(
-        "GitHub token with contents write access:",
-        "",
-      );
-      if (!token) return null;
-      cfg.token = token.trim();
-    }
+    // Do NOT prompt for or store a token on the client
     saveGitHubConfig(cfg);
     return cfg;
   }
@@ -187,20 +181,13 @@
   }
 
   async function githubFetchFileMeta(cfg, path) {
-    const repo = `${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`;
-    const apiPath = encodeGitHubPath(path);
-    const url = `https://api.github.com/repos/${repo}/contents/${apiPath}?ref=${encodeURIComponent(cfg.branch)}`;
-    const res = await originalFetch(url, {
-      headers: {
-        Authorization: `Bearer ${cfg.token}`,
-        Accept: "application/vnd.github+json",
-      },
+    const res = await originalFetch(`${LOCAL_API_ORIGIN}/api/github/meta`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ owner: cfg.owner, repo: cfg.repo, branch: cfg.branch, path }),
     });
     if (!res.ok) {
-      const message = await readErrorMessage(
-        res,
-        `GitHub read failed (${res.status})`,
-      );
+      const message = await readErrorMessage(res, `GitHub meta read failed (${res.status})`);
       throw new Error(message);
     }
     return res.json();
@@ -208,30 +195,21 @@
 
   async function githubWriteJson(cfg, path, data, message) {
     const meta = await githubFetchFileMeta(cfg, path);
-    const repo = `${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`;
-    const apiPath = encodeGitHubPath(path);
-    const res = await originalFetch(
-      `https://api.github.com/repos/${repo}/contents/${apiPath}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${cfg.token}`,
-          Accept: "application/vnd.github+json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message,
-          content: toBase64Utf8(`${JSON.stringify(data, null, 2)}\n`),
-          sha: meta.sha,
-          branch: cfg.branch,
-        }),
-      },
-    );
+    const res = await originalFetch(`${LOCAL_API_ORIGIN}/api/github/write`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        owner: cfg.owner,
+        repo: cfg.repo,
+        branch: cfg.branch,
+        path,
+        data,
+        message,
+        sha: meta && meta.sha ? meta.sha : undefined,
+      }),
+    });
     if (!res.ok) {
-      const messageText = await readErrorMessage(
-        res,
-        `GitHub write failed (${res.status})`,
-      );
+      const messageText = await readErrorMessage(res, `GitHub write failed (${res.status})`);
       throw new Error(messageText);
     }
   }
