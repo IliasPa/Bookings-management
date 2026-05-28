@@ -3,6 +3,8 @@ import { useData } from '../DataContext.jsx';
 import BookingModal from '../components/BookingModal.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
 
+const fmtShort = d => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+
 const PLATFORM_COLORS = {
   Booking: 'bg-blue-100 text-blue-700',
   Airbnb: 'bg-rose-100 text-rose-700',
@@ -73,13 +75,15 @@ export default function Bookings() {
             >{apt.name}</button>
           ))}
         </div>
-        <button onClick={() => setModal('add')}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Add Booking
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setModal('add')}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Booking
+          </button>
+        </div>
       </div>
 
       <div className={`grid gap-3 ${showBookingFinancials ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-3'}`}>

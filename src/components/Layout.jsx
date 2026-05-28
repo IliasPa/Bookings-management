@@ -109,7 +109,7 @@ export default function Layout({ children, pushState, pushError, onPush, hasToke
           ))}
         </nav>
         <div className="px-5 py-4 border-t border-slate-700">
-          <p className="text-slate-500 text-xs">v0.0</p>
+          <p className="text-slate-500 text-xs">v1.1</p>
         </div>
       </aside>
 

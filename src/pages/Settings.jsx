@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
-import ConfirmModal from '../components/ConfirmModal.jsx';
 import { DEFAULT_CONFIG } from '../github.js';
 import { DEFAULT_CATEGORIES } from '../categories.js';
 
@@ -35,15 +34,11 @@ function Toggle({ label, description, checked, onChange }) {
 
 export default function Settings() {
   const {
-    apartments, setApartments, markDirty,
     token, config, saveToken, saveConfig, reload,
     showBookingFinancials, saveShowBookingFinancials,
     expenseCategories, saveExpenseCategories,
   } = useData();
 
-  const [newAptName, setNewAptName] = useState('');
-  const [editApt, setEditApt] = useState(null);
-  const [delApt, setDelApt] = useState(null);
   const [ghForm, setGhForm] = useState({ ...config, token: '' });
   const [ghSaved, setGhSaved] = useState(false);
   const [tokenVisible, setTokenVisible] = useState(false);
@@ -53,28 +48,6 @@ export default function Settings() {
   const [newRoom, setNewRoom] = useState('');
   const [expandedRoom, setExpandedRoom] = useState(null);
   const [newCat, setNewCat] = useState('');
-
-  const addApartment = () => {
-    if (!newAptName.trim()) return;
-    const id = newAptName.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-    if (apartments.find(a => a.id === id)) return;
-    setApartments(prev => [...prev, { id, name: newAptName.trim(), notes: '' }]);
-    markDirty();
-    setNewAptName('');
-  };
-
-  const renameApartment = () => {
-    if (!editApt?.name.trim()) return;
-    setApartments(prev => prev.map(a => a.id === editApt.id ? { ...a, name: editApt.name, notes: editApt.notes ?? '' } : a));
-    markDirty();
-    setEditApt(null);
-  };
-
-  const deleteApartment = () => {
-    setApartments(prev => prev.filter(a => a.id !== delApt.id));
-    markDirty();
-    setDelApt(null);
-  };
 
   const saveGitHub = () => {
     const newConfig = { owner: ghForm.owner, repo: ghForm.repo, branch: ghForm.branch || 'main' };
@@ -211,48 +184,6 @@ export default function Settings() {
         </div>
       </Section>
 
-      <Section title="Apartments">
-        <div className="space-y-2 mb-4">
-          {apartments.map(apt => (
-            <div key={apt.id} className="border border-slate-100 rounded-lg p-3">
-              {editApt?.id === apt.id ? (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <input type="text" value={editApt.name} onChange={e => setEditApt(a => ({ ...a, name: e.target.value }))}
-                      onKeyDown={e => { if (e.key === 'Escape') setEditApt(null); }}
-                      autoFocus className="flex-1 border border-blue-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    <button onClick={renameApartment} className="text-sm text-blue-600 hover:underline">Save</button>
-                    <button onClick={() => setEditApt(null)} className="text-sm text-slate-400 hover:underline">Cancel</button>
-                  </div>
-                  <textarea value={editApt.notes ?? ''} onChange={e => setEditApt(a => ({ ...a, notes: e.target.value }))}
-                    placeholder="Notes…" rows={2}
-                    className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
-                </div>
-              ) : (
-                <div className="flex items-start gap-3">
-                  <div className="flex-1">
-                    <p className="text-sm text-slate-800 font-medium">{apt.name}</p>
-                    {apt.notes && <p className="text-xs text-slate-400 mt-0.5">{apt.notes}</p>}
-                  </div>
-                  <button onClick={() => setEditApt({ ...apt })} className="text-xs text-slate-400 hover:text-blue-600">Edit</button>
-                  <button onClick={() => setDelApt(apt)} className="text-xs text-slate-400 hover:text-red-600">Delete</button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          <input type="text" value={newAptName} onChange={e => setNewAptName(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') addApartment(); }}
-            placeholder="New apartment name…"
-            className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          <button onClick={addApartment} disabled={!newAptName.trim()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50">
-            Add
-          </button>
-        </div>
-      </Section>
-
       <Section title="Expense Categories">
         <p className="text-xs text-slate-400 mb-4">Manage rooms and their sub-categories used in expense entries.</p>
         <div className="space-y-2 mb-4">
@@ -311,13 +242,6 @@ export default function Settings() {
         </div>
       </Section>
 
-      {delApt && (
-        <ConfirmModal
-          message={`Delete apartment "${delApt.name}"? Bookings/expenses referencing it are kept.`}
-          onConfirm={deleteApartment}
-          onCancel={() => setDelApt(null)}
-        />
-      )}
     </div>
   );
 }

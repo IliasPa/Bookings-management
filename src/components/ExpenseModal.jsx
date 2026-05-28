@@ -1,27 +1,48 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
 
+// Normalize legacy boolean status to the new 3-state string
+const normalizeStatus = s => {
+  if (s === true || s === 'bought') return 'bought';
+  if (s === 'amortized') return 'amortized';
+  return 'pending';
+};
+
 export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
-  const { expenseCategories } = useData();
+  const { expenseCategories, manager } = useData();
   const { rooms, categories } = expenseCategories;
+
+  // Unique payers: apartment owners + manager
+  const owners = [...new Set([
+    ...apartments.map(a => a.owner).filter(Boolean),
+    ...(manager?.name ? [manager.name] : []),
+  ])];
 
   const isNew = !expense;
   const defaultApt = apartments[0]?.name || 'General';
   const defaultRoom = rooms[0] || 'General';
 
-  const [form, setForm] = useState({
-    apartment: defaultApt,
-    categoryI: defaultRoom,
-    categoryII: (categories[defaultRoom] || ['Other'])[0],
-    item: '',
-    where: '',
-    quantity: 1,
-    costPerUnit: '',
-    totalCost: '',
-    status: true,
-    depreciation: false,
-    notes: '',
-    ...expense,
+  const [form, setForm] = useState(() => {
+    const base = {
+      apartment: defaultApt,
+      categoryI: defaultRoom,
+      categoryII: (categories[defaultRoom] || ['Other'])[0],
+      item: '',
+      where: '',
+      quantity: 1,
+      costPerUnit: '',
+      totalCost: '',
+      status: 'pending',
+      notes: '',
+      paidBy: '',
+    };
+    if (!expense) return base;
+    return {
+      ...base,
+      ...expense,
+      status: normalizeStatus(expense.status),
+      paidBy: expense.paidBy || '',
+    };
   });
 
   const set = (k, v) => setForm(f => {
@@ -86,7 +107,7 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Item</label>
               <input type="text" value={form.item} onChange={e => set('item', e.target.value)} required
@@ -96,6 +117,14 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
               <label className="text-xs font-medium text-slate-500 mb-1 block">Where purchased</label>
               <input type="text" value={form.where} onChange={e => set('where', e.target.value)}
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">Paid by</label>
+              <select value={form.paidBy} onChange={e => set('paidBy', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">—</option>
+                {owners.map(o => <option key={o} value={o}>{o}</option>)}
+              </select>
             </div>
           </div>
 
@@ -119,15 +148,16 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
             </div>
           </div>
 
-          <div className="flex gap-6">
-            <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-              <input type="checkbox" checked={form.status} onChange={e => set('status', e.target.checked)} className="rounded" />
-              Status
-            </label>
-            <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-              <input type="checkbox" checked={form.depreciation} onChange={e => set('depreciation', e.target.checked)} className="rounded" />
-              Depreciating asset
-            </label>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">Status</label>
+              <select value={form.status} onChange={e => set('status', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="pending">⬜ Not bought yet</option>
+                <option value="bought">💰 Bought</option>
+                <option value="amortized">✅ Amortized</option>
+              </select>
+            </div>
           </div>
 
           <div>

@@ -13,6 +13,16 @@ const CAT_COLORS = {
   General: 'bg-slate-100 text-slate-600',
 };
 
+// Normalize legacy boolean status → 3-state string
+const normalizeStatus = s => {
+  if (s === true || s === 'bought') return 'bought';
+  if (s === 'amortized') return 'amortized';
+  return 'pending';
+};
+
+const STATUS_ICON = { pending: '⬜', bought: '💰', amortized: '✅' };
+const STATUS_LABEL = { pending: 'Not bought yet', bought: 'Bought', amortized: 'Amortized' };
+
 export default function Expenses() {
   const { expenses, setExpenses, apartments, markDirty, expenseCategories } = useData();
   const { rooms, categories } = expenseCategories;
@@ -39,10 +49,10 @@ export default function Expenses() {
       return 0;
     });
 
-  const totalCost = filtered.filter(e => e.status !== false).reduce((s, e) => s + e.totalCost, 0);
+  const totalCost = filtered.filter(e => normalizeStatus(e.status) !== 'pending').reduce((s, e) => s + e.totalCost, 0);
 
   const byApt = {};
-  expenses.filter(e => e.status !== false).forEach(e => { byApt[e.apartment] = (byApt[e.apartment] || 0) + e.totalCost; });
+  expenses.filter(e => normalizeStatus(e.status) !== 'pending').forEach(e => { byApt[e.apartment] = (byApt[e.apartment] || 0) + e.totalCost; });
   const aptOrder = [...apartments.map(a => a.name), 'General'];
   const grandTotal = Object.values(byApt).reduce((s, v) => s + v, 0);
 
@@ -133,52 +143,54 @@ export default function Expenses() {
                   <th className="px-4 py-3 text-left font-medium">Category</th>
                   <th className="px-4 py-3 text-left font-medium">Item</th>
                   <th className="px-4 py-3 text-left font-medium">Where</th>
+                  <th className="px-4 py-3 text-left font-medium">WHO</th>
                   <th className="px-4 py-3 text-center font-medium">Qty</th>
                   <th className="px-4 py-3 text-right font-medium">Cost/unit</th>
                   <th className="px-4 py-3 text-right font-medium">Total</th>
-                  <th className="px-4 py-3 text-center font-medium">Tags</th>
+                  <th className="px-4 py-3 text-center font-medium">Status</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
-                {filtered.map(e => (
-                  <tr key={e.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-slate-800">{e.apartment}</td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${CAT_COLORS[e.categoryI] || 'bg-slate-100 text-slate-600'}`}>
-                        {e.categoryI}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">{e.categoryII}</td>
-                    <td className="px-4 py-3 text-slate-800">{e.item}</td>
-                    <td className="px-4 py-3 text-slate-500">{e.where || '—'}</td>
-                    <td className="px-4 py-3 text-center text-slate-600">{e.quantity}</td>
-                    <td className="px-4 py-3 text-right text-slate-600">{e.costPerUnit ? `€${e.costPerUnit}` : '—'}</td>
-                    <td className="px-4 py-3 text-right font-semibold text-slate-800">{fmtMoney(e.totalCost)}</td>
-                    <td className="px-4 py-3 text-center">
-                      <div className="flex gap-1 justify-center items-center">
-                        <span title={e.status !== false ? 'Happened' : 'Pending'} className="text-base leading-none">
-                          {e.status !== false ? '✅' : '⬜'}
+                {filtered.map(e => {
+                  const status = normalizeStatus(e.status);
+                  return (
+                    <tr key={e.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-colors">
+                      <td className="px-4 py-3 font-medium text-slate-800">{e.apartment}</td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${CAT_COLORS[e.categoryI] || 'bg-slate-100 text-slate-600'}`}>
+                          {e.categoryI}
                         </span>
-                        {e.depreciation && <span className="px-1.5 py-0.5 rounded text-xs bg-slate-100 text-slate-600" title="Depreciating asset">📉</span>}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 justify-end">
-                        <button onClick={() => setModal(e)} className="p-1.5 rounded text-slate-400 hover:text-blue-600 hover:bg-blue-50">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </button>
-                        <button onClick={() => setDelTarget(e)} className="p-1.5 rounded text-slate-400 hover:text-red-600 hover:bg-red-50">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-4 py-3 text-slate-600">{e.categoryII}</td>
+                      <td className="px-4 py-3 text-slate-800">{e.item}</td>
+                      <td className="px-4 py-3 text-slate-500">{e.where || '—'}</td>
+                      <td className="px-4 py-3 text-slate-600 text-sm">{e.paidBy || '—'}</td>
+                      <td className="px-4 py-3 text-center text-slate-600">{e.quantity}</td>
+                      <td className="px-4 py-3 text-right text-slate-600">{e.costPerUnit ? `€${e.costPerUnit}` : '—'}</td>
+                      <td className="px-4 py-3 text-right font-semibold text-slate-800">{fmtMoney(e.totalCost)}</td>
+                      <td className="px-4 py-3 text-center">
+                        <span title={STATUS_LABEL[status]} className="text-base leading-none">
+                          {STATUS_ICON[status]}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1 justify-end">
+                          <button onClick={() => setModal(e)} className="p-1.5 rounded text-slate-400 hover:text-blue-600 hover:bg-blue-50">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button onClick={() => setDelTarget(e)} className="p-1.5 rounded text-slate-400 hover:text-red-600 hover:bg-red-50">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             <div className="px-4 py-3 border-t border-slate-100 flex justify-between items-center bg-slate-50">

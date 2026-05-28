@@ -9,7 +9,7 @@
   ],
   "rates": {
     "fullClean": 60,
-    "beddingChange": 60,
+    "beddingChange": 0,
     "beddingInterval": 4
   }
 }

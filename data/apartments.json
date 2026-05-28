@@ -1,12 +1,24 @@
-[
-  {
-    "id": "revekka",
-    "name": "Front",
-    "notes": "93 m2"
-  },
-  {
-    "id": "back",
-    "name": "Back",
-    "notes": "80 m2"
+{
+  "apartments": [
+    {
+      "id": "revekka",
+      "name": "Front",
+      "notes": "93 m2",
+      "owner": "Revekka",
+      "ownerPhone": "+30 698 079 2814",
+      "shares": {}
+    },
+    {
+      "id": "back",
+      "name": "Back",
+      "notes": "80 m2",
+      "owner": "Mama",
+      "ownerPhone": "+30 698 079 2814",
+      "shares": {}
+    }
+  ],
+  "manager": {
+    "name": "Ilias",
+    "phone": "+30 698 079 2814"
   }
-]
+}
