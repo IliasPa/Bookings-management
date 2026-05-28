@@ -1,0 +1,86 @@
+[
+  {
+    "id": "cons_1779763896966",
+    "apartment": "general",
+    "name": "Sponges",
+    "costModel": "perStay",
+    "quantityPerUse": 1,
+    "guestsDefault": 4,
+    "dateBought": "2026-04-11",
+    "quantity": 50,
+    "totalCost": 4,
+    "notes": "Temu"
+  },
+  {
+    "id": "cons_1779764085385",
+    "apartment": "general",
+    "name": "Slipers",
+    "costModel": "perGuest",
+    "quantityPerUse": 1,
+    "guestsDefault": 4,
+    "dateBought": "2026-04-11",
+    "quantity": 20,
+    "totalCost": 4.8,
+    "notes": "Temu"
+  },
+  {
+    "id": "cons_1779764176734",
+    "apartment": "general",
+    "name": "Cotton Swabs",
+    "costModel": "perGuest",
+    "quantityPerUse": 1,
+    "guestsDefault": 4,
+    "dateBought": "2026-04-11",
+    "quantity": 50,
+    "totalCost": 8,
+    "notes": "Temu"
+  },
+  {
+    "id": "cons_1779764242418",
+    "apartment": "general",
+    "name": "Toothbrushes",
+    "costModel": "perGuest",
+    "quantityPerUse": 1,
+    "guestsDefault": 4,
+    "dateBought": "2026-04-11",
+    "quantity": 101,
+    "totalCost": 13.13,
+    "notes": "Temu"
+  },
+  {
+    "id": "cons_1779764399980",
+    "apartment": "general",
+    "name": "Shampoo",
+    "costModel": "perStay",
+    "quantityPerUse": 0.1,
+    "guestsDefault": 4,
+    "dateBought": "2026-04-16",
+    "quantity": 5,
+    "totalCost": 11,
+    "notes": "Scondo"
+  },
+  {
+    "id": "cons_1779764674994",
+    "apartment": "general",
+    "name": "Conditioner",
+    "costModel": "perStay",
+    "quantityPerUse": 0.1,
+    "guestsDefault": 4,
+    "dateBought": "2026-04-16",
+    "quantity": 5,
+    "totalCost": 0,
+    "notes": "Scondo"
+  },
+  {
+    "id": "cons_1779764736494",
+    "apartment": "general",
+    "name": "Body soap",
+    "costModel": "perStay",
+    "quantityPerUse": 0.1,
+    "guestsDefault": 4,
+    "dateBought": "2026-04-16",
+    "quantity": 2,
+    "totalCost": 7.2,
+    "notes": "Scondo"
+  }
+]
