@@ -17,6 +17,9 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
     platform: 'Booking',
     reservation: '',
     commission: '',
+    guestName: '',
+    guestId: '',
+    guestTaxNumber: '',
     notes: '',
     ...booking,
   });
@@ -130,13 +133,46 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
             {nights > 0 && <span>· €{(netIncome / nights).toFixed(0)}/night</span>}
           </div>
 
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">Guest Name</label>
+              <input
+                type="text"
+                value={form.guestName}
+                onChange={e => set('guestName', e.target.value)}
+                placeholder="Name"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">ID</label>
+              <input
+                type="text"
+                value={form.guestId}
+                onChange={e => set('guestId', e.target.value)}
+                placeholder="ID"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">Tax Number</label>
+              <input
+                type="text"
+                value={form.guestTaxNumber}
+                onChange={e => set('guestTaxNumber', e.target.value)}
+                placeholder="Tax number"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
           <div>
             <label className="text-xs font-medium text-slate-500 mb-1 block">Notes</label>
             <input
               type="text"
               value={form.notes}
               onChange={e => set('notes', e.target.value)}
-              placeholder="Guest name, special notes…"
+              placeholder="Special notes…"
               className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

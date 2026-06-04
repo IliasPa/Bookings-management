@@ -3,6 +3,8 @@ import { useData } from '../DataContext.jsx';
 import BookingModal from '../components/BookingModal.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
 
+const fmtShort = d => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+
 const PLATFORM_COLORS = {
   Booking: 'bg-blue-100 text-blue-700',
   Airbnb: 'bg-rose-100 text-rose-700',
@@ -15,11 +17,12 @@ const fmtDate = d => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', m
 const fmtMoney = n => `€${(n || 0).toLocaleString('en-EU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 export default function Bookings() {
-  const { bookings, setBookings, apartments, markDirty, showBookingFinancials } = useData();
+  const { bookings, setBookings, apartments, markDirty, showBookingFinancials, accountant } = useData();
   const [activeApt, setActiveApt] = useState('all');
   const [modal, setModal] = useState(null);
   const [delTarget, setDelTarget] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [showMonthDropdown, setShowMonthDropdown] = useState(false);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
@@ -55,6 +58,65 @@ export default function Bookings() {
     setDelTarget(null);
   };
 
+  const getMonthsWithBookings = () => {
+    const months = new Map();
+    bookings.forEach(b => {
+      const date = new Date(b.checkIn);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      if (!months.has(key)) {
+        months.set(key, { year: date.getFullYear(), month: date.getMonth() + 1 });
+      }
+    });
+    return Array.from(months.values())
+      .sort((a, b) => b.year === a.year ? b.month - a.month : b.year - a.year);
+  };
+
+  const formatMonthName = (year, month) => {
+    const date = new Date(year, month - 1);
+    return date.toLocaleDateString('el-GR', { month: 'long', year: 'numeric' });
+  };
+
+  const generateEmailForMonth = (year, month) => {
+    const monthBookings = bookings.filter(b => {
+      const date = new Date(b.checkIn);
+      return date.getFullYear() === year && date.getMonth() + 1 === month;
+    }).sort((a, b) => new Date(a.checkIn) - new Date(b.checkIn));
+
+    if (monthBookings.length === 0) return null;
+
+    let emailBody = '';
+    monthBookings.forEach((b, idx) => {
+      const apt = apartments.find(a => a.id === b.apartment);
+      const ama = apt?.ama || '';
+      const checkInDate = new Date(b.checkIn).toLocaleDateString('el-GR', { day: '2-digit', month: '2-digit' });
+      const checkOutDate = new Date(b.checkOut).toLocaleDateString('el-GR', { day: '2-digit', month: '2-digit' });
+
+      emailBody += `${ama}\n`;
+      emailBody += `1) ${b.guestName || '—'}\n`;
+      emailBody += `2) ${b.guestTaxNumber || '—'}\n`;
+      emailBody += `3) ${b.guestId || '—'}\n`;
+      emailBody += `4) ${b.reservation.toFixed(2)}€\n`;
+      emailBody += `5) card\n`;
+      emailBody += `6) ${checkInDate} - ${checkOutDate}\n`;
+      emailBody += `7) ${b.platform}\n`;
+      if (idx < monthBookings.length - 1) emailBody += '\n';
+    });
+
+    const subject = `Bookings of month ${formatMonthName(year, month)}`;
+    const to = accountant.email || '';
+
+    return { to, subject, body: emailBody };
+  };
+
+  const handleEmailMonth = (year, month) => {
+    const email = generateEmailForMonth(year, month);
+    if (!email) return;
+
+    const mailtoLink = `mailto:${encodeURIComponent(email.to)}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}`;
+    window.location.href = mailtoLink;
+    setShowMonthDropdown(false);
+  };
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -73,13 +135,41 @@ export default function Bookings() {
             >{apt.name}</button>
           ))}
         </div>
-        <button onClick={() => setModal('add')}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Add Booking
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setModal('add')}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Booking
+          </button>
+          {getMonthsWithBookings().length > 0 && (
+            <div className="relative">
+              <button
+                onClick={() => setShowMonthDropdown(!showMonthDropdown)}
+                className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8a4 4 0 014-4h10a4 4 0 014 4v8a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" />
+                </svg>
+                Email by Month
+              </button>
+              {showMonthDropdown && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg z-40">
+                  {getMonthsWithBookings().map(({ year, month }) => (
+                    <button
+                      key={`${year}-${month}`}
+                      onClick={() => handleEmailMonth(year, month)}
+                      className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 border-b border-slate-100 last:border-0"
+                    >
+                      {formatMonthName(year, month)}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className={`grid gap-3 ${showBookingFinancials ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-3'}`}>

@@ -28,6 +28,8 @@ export default function App() {
   const [bookings, setBookings] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [apartments, setApartments] = useState([]);
+  const [manager, setManager] = useState({ name: '', phone: '' });
+  const [accountant, setAccountant] = useState({ name: '', phone: '', email: '' });
   const [consumables, setConsumables] = useState([]);
   const [cleaning, setCleaning] = useState({ hiddenCosts: [], rates: { fullClean: 60, beddingChange: 60, beddingInterval: 4 } });
 
@@ -52,6 +54,8 @@ export default function App() {
         setBookings(c.bookings || []);
         setExpenses(c.expenses || []);
         setApartments(c.apartments || []);
+        setManager(c.manager || { name: '', phone: '' });
+        setAccountant(c.accountant || { name: '', phone: '', email: '' });
         setConsumables(c.consumables || []);
         setCleaning(c.cleaning || { hiddenCosts: [], rates: { fullClean: 60, beddingChange: 60, beddingInterval: 4 } });
         if (c.expenseCategories) setExpenseCategories(c.expenseCategories);
@@ -66,6 +70,8 @@ export default function App() {
       setBookings(data.bookings);
       setExpenses(data.expenses);
       setApartments(data.apartments);
+      setManager(data.manager || { name: '', phone: '' });
+      setAccountant(data.accountant || { name: '', phone: '', email: '' });
       setConsumables(data.consumables || []);
       setCleaning(data.cleaning || { hiddenCosts: [], rates: { fullClean: 60, beddingChange: 60, beddingInterval: 4 } });
       if (data.expenseCategories) setExpenseCategories(data.expenseCategories);
@@ -107,8 +113,8 @@ export default function App() {
     setPushState('pushing');
     setPushError('');
     try {
-      await saveAllData({ bookings, expenses, expenseCategories, apartments, consumables, cleaning }, token, config);
-      localStorage.setItem('data_cache', JSON.stringify({ bookings, expenses, expenseCategories, apartments, consumables, cleaning }));
+      await saveAllData({ bookings, expenses, expenseCategories, apartments, manager, accountant, consumables, cleaning }, token, config);
+      localStorage.setItem('data_cache', JSON.stringify({ bookings, expenses, expenseCategories, apartments, manager, accountant, consumables, cleaning }));
       setPushState('success');
       setTimeout(() => setPushState('idle'), 3000);
     } catch (err) {
@@ -116,7 +122,7 @@ export default function App() {
       setPushState('error');
       setTimeout(() => setPushState('dirty'), 5000);
     }
-  }, [bookings, expenses, expenseCategories, apartments, consumables, cleaning, token, config]);
+  }, [bookings, expenses, expenseCategories, apartments, manager, accountant, consumables, cleaning, token, config]);
 
   const saveToken = useCallback((newToken) => {
     localStorage.setItem('gh_token', newToken);
@@ -143,6 +149,8 @@ export default function App() {
     bookings, setBookings,
     expenses, setExpenses,
     apartments, setApartments,
+    manager, setManager,
+    accountant, setAccountant,
     consumables, setConsumables,
     cleaning, setCleaning,
     markDirty,

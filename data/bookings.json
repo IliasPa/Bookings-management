@@ -149,8 +149,8 @@
     "checkIn": "2026-04-25",
     "checkOut": "2026-04-26",
     "platform": "Airbnb",
-    "reservation": 77.02,
-    "commission": 0,
+    "reservation": 100,
+    "commission": 22.98,
     "notes": "",
     "nights": 1,
     "netIncome": 77.02
