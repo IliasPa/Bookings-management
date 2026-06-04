@@ -105,7 +105,10 @@
     "reservation": 2816,
     "commission": 104.76,
     "netIncome": 2711.24,
-    "notes": ""
+    "notes": "Children with allergies",
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "b4",

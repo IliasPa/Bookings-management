@@ -6,8 +6,11 @@
       "notes": "93 m2",
       "owner": "Revekka",
       "ownerPhone": "+30 698 079 2814",
-      "ama": "",
-      "shares": {}
+      "ama": "00003776527",
+      "shares": {
+        "Revekka": 80,
+        "manager": 20
+      }
     },
     {
       "id": "back",
@@ -15,17 +18,15 @@
       "notes": "80 m2",
       "owner": "Mama",
       "ownerPhone": "+30 698 079 2814",
-      "ama": "",
-      "shares": {}
+      "ama": "00003776393",
+      "shares": {
+        "manager": 50,
+        "Mama": 50
+      }
     }
   ],
   "manager": {
     "name": "Ilias",
     "phone": "+30 698 079 2814"
-  },
-  "accountant": {
-    "name": "",
-    "phone": "",
-    "email": ""
   }
 }
