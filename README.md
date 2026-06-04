@@ -1,4 +1,4 @@
-# Apartment Manager v1.0
+# Apartment Manager v1.2
 
 Short-rental property management app for two apartments in Lefkada, Greece.
 
@@ -25,10 +25,14 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 ### Bookings
 
 - Add, edit, delete bookings
-- Fields: apartment, check-in, check-out, nights (auto), platform, reservation, commission, net income (auto), notes
+- Fields: apartment, check-in, check-out, nights (auto), platform, reservation, commission, net income (auto), guest name, guest ID, tax number, notes
+- Guest personal data (name, ID, tax number) stored but not shown in the bookings table
 - Filter: All / Upcoming / Past — with a visual divider between past and upcoming in All view
 - Per-apartment tabs or all-apartments view
 - Toggle to show/hide gross & commission columns (Settings → Display)
+- **Email by Month** dropdown — generates formatted emails with monthly booking details:
+  - Includes guest information, reservation amounts, payment method, dates, and platform
+  - Sends to the accountant's email with pre-filled subject and body
 
 ### Expenses
 
@@ -41,9 +45,13 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 
 ### Owners
 
-- Add/remove owners per apartment
-- Set ownership percentage (validates 100% per apartment)
-- Income distribution table showing each owner's share
+- **Apartment Management** — add/remove apartments, manage owner info
+  - Owner name and phone per apartment
+  - ΑΜΑ number (Greek tax registration number) per apartment
+- **Accountant Card** — manage accountant contact information
+  - Name, phone, email for communicating booking details
+- **Ownership Shares** — set ownership percentage per apartment (validates 100% per apartment)
+- **Income Distribution** — table showing each owner's share per apartment and total
 
 ### Consumables
 
@@ -82,9 +90,9 @@ All data is stored as JSON files in the GitHub repo under `data/`, read and writ
 
 | File | Contents |
 |---|---|
-| `data/bookings.json` | Booking records |
+| `data/bookings.json` | Booking records (includes guest personal data) |
 | `data/expenses.json` | `{ expenses: [...], categories: {...} }` |
-| `data/apartments.json` | Apartment definitions |
+| `data/apartments.json` | Apartment definitions + accountant contact info |
 | `data/consumables.json` | Consumable stock entries |
 | `data/cleaning.json` | `{ hiddenCosts: [...], rates: {...} }` |
 
