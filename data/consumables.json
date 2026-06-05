@@ -82,5 +82,17 @@
     "quantity": 2,
     "totalCost": 7.2,
     "notes": "Scondo"
+  },
+  {
+    "id": "cons_1780684668815",
+    "apartment": "general",
+    "name": "Breakfast",
+    "costModel": "perGuest",
+    "quantityPerUse": 3,
+    "guestsDefault": 4,
+    "dateBought": "2026-06-05",
+    "quantity": 136,
+    "notes": "Merenda, Peach, Strawberry",
+    "totalCost": 17.26
   }
 ]
