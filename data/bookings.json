@@ -93,7 +93,10 @@
     "reservation": 437,
     "commission": 10,
     "netIncome": 427,
-    "notes": ""
+    "notes": "",
+    "guestName": "Θεοχάρη Βασιλική",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "b3",
@@ -160,5 +163,20 @@
     "notes": "",
     "nights": 1,
     "netIncome": 77.02
+  },
+  {
+    "id": "bk_1781081693457",
+    "apartment": "back",
+    "checkIn": "2026-07-31",
+    "checkOut": "2026-08-01",
+    "platform": "Airbnb",
+    "reservation": 160,
+    "commission": 5.95,
+    "guestName": "Nicolas Boulard",
+    "guestId": "",
+    "guestTaxNumber": "",
+    "notes": "France",
+    "nights": 1,
+    "netIncome": 154.05
   }
 ]
