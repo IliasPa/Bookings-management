@@ -166,5 +166,20 @@
     "notes": "France",
     "nights": 1,
     "netIncome": 154.05
+  },
+  {
+    "id": "bk_1781729982047",
+    "apartment": "revekka",
+    "checkIn": "2026-08-29",
+    "checkOut": "2026-09-05",
+    "platform": "Booking",
+    "reservation": 1033.5,
+    "commission": 162.52,
+    "guestName": "Marciuc Irina",
+    "guestId": "",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 7,
+    "netIncome": 870.98
   }
 ]

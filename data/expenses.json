@@ -530,6 +530,62 @@
       "depreciation": false,
       "notes": "",
       "paidBy": ""
+    },
+    {
+      "id": "ex_1781727595037",
+      "apartment": "Front",
+      "categoryI": "General",
+      "categoryII": "Safety",
+      "item": "Smoke Detector",
+      "where": "Profi",
+      "quantity": 3,
+      "costPerUnit": 10.9,
+      "totalCost": 32.7,
+      "status": "amortized",
+      "notes": "",
+      "paidBy": "Ilias"
+    },
+    {
+      "id": "ex_1781727780967",
+      "apartment": "Back",
+      "categoryI": "General",
+      "categoryII": "Safety",
+      "item": "Smoke Detector",
+      "where": "Profi",
+      "quantity": 3,
+      "costPerUnit": 10.9,
+      "totalCost": 32.7,
+      "status": "amortized",
+      "notes": "",
+      "paidBy": "Ilias"
+    },
+    {
+      "id": "ex_1781727847494",
+      "apartment": "Front",
+      "categoryI": "General",
+      "categoryII": "Safety",
+      "item": "Exit",
+      "where": "Profi",
+      "quantity": 1,
+      "costPerUnit": 17,
+      "totalCost": 17,
+      "status": "amortized",
+      "notes": "",
+      "paidBy": ""
+    },
+    {
+      "id": "ex_1781727878544",
+      "apartment": "Back",
+      "categoryI": "General",
+      "categoryII": "Safety",
+      "item": "Exit",
+      "where": "Profi",
+      "quantity": 1,
+      "costPerUnit": 17,
+      "totalCost": 17,
+      "status": "amortized",
+      "notes": "",
+      "paidBy": "Ilias"
     }
   ],
   "categories": {
@@ -575,7 +631,8 @@
       "General": [
         "Internet / TV",
         "Maintenance",
-        "Other"
+        "Other",
+        "Safety"
       ]
     }
   }
