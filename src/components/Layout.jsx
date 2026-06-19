@@ -48,6 +48,15 @@ const nav = [
     ),
   },
   {
+    to: '/notes',
+    label: 'Notes',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </svg>
+    ),
+  },
+  {
     to: '/owners',
     label: 'Owners',
     icon: (
@@ -75,6 +84,7 @@ const pageTitles = {
   '/owners': 'Owners',
   '/consumables': 'Consumables',
   '/cleaning': 'Cleaning',
+  '/notes': 'Notes',
   '/settings': 'Settings',
 };
 
@@ -109,7 +119,7 @@ export default function Layout({ children, pushState, pushError, onPush, hasToke
           ))}
         </nav>
         <div className="px-5 py-4 border-t border-slate-700">
-          <p className="text-slate-500 text-xs">v0.0</p>
+          <p className="text-slate-500 text-xs">v1.3</p>
         </div>
       </aside>
 

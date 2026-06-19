@@ -28,5 +28,11 @@
   "manager": {
     "name": "Ilias",
     "phone": "+30 698 079 2814"
-  }
+  },
+  "accountant": {
+    "name": "",
+    "phone": "",
+    "email": ""
+  },
+  "notes": []
 }

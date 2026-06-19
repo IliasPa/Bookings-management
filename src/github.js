@@ -71,18 +71,27 @@ export async function loadAllData(token, config) {
   const rawExp = e.content;
   const expenses = Array.isArray(rawExp) ? rawExp : (rawExp.expenses || []);
   const expenseCategories = Array.isArray(rawExp) ? null : (rawExp.categories || null);
+  // apartments.json may be a plain array (old) or { apartments, manager, accountant, notes } (new)
+  const rawApt = a.content;
+  const apartments = Array.isArray(rawApt) ? rawApt : (rawApt.apartments || []);
+  const manager = Array.isArray(rawApt) ? null : (rawApt.manager || null);
+  const accountant = Array.isArray(rawApt) ? null : (rawApt.accountant || null);
+  const notes = Array.isArray(rawApt) ? [] : (rawApt.notes || []);
   return {
     bookings: b.content,
     expenses,
     expenseCategories,
-    apartments: a.content,
+    apartments,
+    manager,
+    accountant,
+    notes,
     consumables: c.content,
     cleaning: cl.content,
   };
 }
 
 // Single commit for all data files via the Git Data API
-export async function saveAllData({ bookings, expenses, expenseCategories, apartments, consumables, cleaning }, token, config) {
+export async function saveAllData({ bookings, expenses, expenseCategories, apartments, manager, accountant, notes, consumables, cleaning }, token, config) {
   const { owner, repo, branch } = config;
 
   // 1. Current branch tip
@@ -118,7 +127,12 @@ export async function saveAllData({ bookings, expenses, expenseCategories, apart
   const [blobB, blobE, blobA, blobC, blobCl] = await Promise.all([
     makeBlob(bookings),
     makeBlob({ expenses, categories: expenseCategories }),
-    makeBlob(apartments),
+    makeBlob({
+      apartments,
+      manager: manager || { name: '', phone: '' },
+      accountant: accountant || { name: '', phone: '', email: '' },
+      notes: notes || [],
+    }),
     makeBlob(consumables || []),
     makeBlob(cleaning || { hiddenCosts: [] }),
   ]);
