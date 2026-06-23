@@ -181,5 +181,20 @@
     "notes": "",
     "nights": 7,
     "netIncome": 870.98
+  },
+  {
+    "id": "bk_1782239083705",
+    "apartment": "revekka",
+    "checkIn": "2026-08-08",
+    "checkOut": "2026-08-12",
+    "platform": "Booking",
+    "reservation": 680,
+    "commission": 149.65,
+    "guestName": "Altin Pepa",
+    "guestId": "",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 4,
+    "netIncome": 530.35
   }
 ]
