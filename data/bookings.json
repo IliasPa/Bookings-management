@@ -102,21 +102,6 @@
     "guestTaxNumber": ""
   },
   {
-    "id": "b4",
-    "apartment": "back",
-    "checkIn": "2026-09-12",
-    "checkOut": "2026-09-16",
-    "nights": 4,
-    "platform": "Booking",
-    "reservation": 257.26,
-    "commission": 42.72,
-    "netIncome": 214.54,
-    "notes": "to delete. It was August but i changed it to September just so it doesnt mess with cleaning.",
-    "guestName": "",
-    "guestId": "",
-    "guestTaxNumber": ""
-  },
-  {
     "id": "b5",
     "apartment": "back",
     "checkIn": "2026-08-23",
@@ -151,21 +136,6 @@
     "notes": "",
     "nights": 1,
     "netIncome": 77.02
-  },
-  {
-    "id": "bk_1781081693457",
-    "apartment": "back",
-    "checkIn": "2026-07-31",
-    "checkOut": "2026-08-01",
-    "platform": "Airbnb",
-    "reservation": 160,
-    "commission": 5.95,
-    "guestName": "Nicolas Boulard",
-    "guestId": "",
-    "guestTaxNumber": "",
-    "notes": "France",
-    "nights": 1,
-    "netIncome": 154.05
   },
   {
     "id": "bk_1781729982047",
