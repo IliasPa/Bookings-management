@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
-import { computeCleaningEvents, fmtCleanShort } from '../cleaningUtils.js';
+import { computeCleaningEvents, fmtCleanShort, formatCleaningSchedule } from '../cleaningUtils.js';
 
 const DEFAULT_RATES = { fullClean: 60, beddingChange: 60, beddingInterval: 4 };
 
@@ -8,6 +8,13 @@ const TYPE_LABELS = {
   preferred: { bg: 'bg-green-100', text: 'text-green-700', label: 'Preferred' },
   flexible:  { bg: 'bg-blue-100',  text: 'text-blue-700',  label: 'Flexible'  },
   compromise:{ bg: 'bg-amber-100', text: 'text-amber-700', label: 'Compromise'},
+};
+
+const TIME_LABELS = {
+  evening: 'Evening',
+  anytime: 'Anytime',
+  before: 'Before check-in',
+  window: '11:00–15:00',
 };
 
 export default function Cleaning() {
@@ -18,6 +25,7 @@ export default function Cleaning() {
   const [showAll, setShowAll] = useState(false);
   const [filterApt, setFilterApt] = useState('all');
   const [onlyCharged, setOnlyCharged] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const rates = cleaning?.rates || DEFAULT_RATES;
   const hidden = new Set(cleaning?.hiddenCosts || []);
@@ -38,14 +46,37 @@ export default function Cleaning() {
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const allEvents = computeCleaningEvents(bookings, apartments, rates);
 
-  const upcoming = allEvents.filter(e => e.sortDate >= today);
+  // A cleaning is only "past" once the guest it prepares for has checked in
+  // (refDate = that booking's check-in), not when its suggested clean date passes.
+  const isPast = (e) => e.refDate < today;
+
+  const upcoming = allEvents.filter(e => !isPast(e));
   const upcomingCharged = upcoming.filter(e => !hidden.has(e.id));
   const totalCost = upcomingCharged.reduce((s, e) => s + e.cost, 0);
 
   const visible = allEvents
-    .filter(e => showAll || e.sortDate >= today)
+    .filter(e => showAll || !isPast(e))
     .filter(e => filterApt === 'all' || e.aptId === filterApt)
     .filter(e => !onlyCharged || !hidden.has(e.id));
+
+  // For the cleaner: same on-screen scope, but always drop the "I'll do it myself" jobs.
+  const copyList = visible.filter(e => !hidden.has(e.id));
+
+  const copySchedule = async () => {
+    const text = formatCleaningSchedule(copyList, { showAll, today });
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
 
   return (
     <div className="space-y-5 max-w-3xl">
@@ -146,6 +177,15 @@ export default function Cleaning() {
         </div>
       </div>
 
+      {/* Copy for cleaner */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <button onClick={copySchedule} disabled={copyList.length === 0}
+          className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+          {copied ? '✓ Copied' : 'Copy schedule for cleaner'}
+        </button>
+        <span className="text-xs text-slate-400">{copyList.length} job{copyList.length === 1 ? '' : 's'} · Greek · no prices</span>
+      </div>
+
       {/* Events list */}
       {visible.length === 0 ? (
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-12 text-center text-slate-400 text-sm">
@@ -155,44 +195,48 @@ export default function Cleaning() {
         <div className="space-y-2">
           {visible.map(e => {
             const typeStyle = TYPE_LABELS[e.suggestion.type];
-            const isPast = e.sortDate < today;
+            const past = isPast(e);
             const isHidden = hidden.has(e.id);
             return (
-              <div key={e.id} className={`bg-white rounded-xl border border-slate-100 shadow-sm p-4 transition-opacity ${isPast || isHidden ? 'opacity-40' : ''}`}>
+              <div key={e.id} className={`bg-white rounded-xl border border-slate-100 shadow-sm p-4 transition-opacity ${past || isHidden ? 'opacity-40' : ''}`}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 flex-1 min-w-0">
                     <div className="w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: e.aptColor }} />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="font-medium text-slate-800 text-sm">{e.aptName}</span>
+                    <div className="flex-1 min-w-0 space-y-1.5">
+                      {/* Apartment • Job */}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-semibold text-slate-800 text-sm">{e.aptName}</span>
+                        <span className="text-slate-300">•</span>
                         <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${e.type === 'full' ? 'bg-slate-100 text-slate-600' : 'bg-purple-100 text-purple-700'}`}>
                           {e.label}
                         </span>
+                      </div>
+                      {/* 🕒 Date • Time • Category */}
+                      <div className="flex items-center gap-1.5 flex-wrap text-xs text-slate-700">
+                        <span>🕒</span>
+                        <span className="font-medium">{fmtCleanShort(e.suggestion.date)}</span>
+                        <span className="text-slate-300">•</span>
+                        <span>{TIME_LABELS[e.suggestion.timeKey] || e.suggestion.timeKey}</span>
+                        <span className="text-slate-300">•</span>
                         <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${typeStyle.bg} ${typeStyle.text}`}>
                           {typeStyle.label}
                         </span>
-                        {e.backToBack && (
-                          <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-red-100 text-red-600">Back-to-back</span>
-                        )}
                       </div>
-                      <p className="text-xs text-slate-500 mb-1">{e.detail}</p>
-                      <div className="flex items-center gap-1 text-xs text-slate-700">
-                        <svg className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span className="font-medium">{e.suggestion.label}</span>
-                        <span className="text-slate-400">— {e.suggestion.note}</span>
+                      {/* 🔄 Possible timing / flexibility */}
+                      <div className="text-xs text-slate-500">🔄 {e.flexWindow}</div>
+                      {/* 🚪 Check-in → Check-out • nights */}
+                      <div className="text-xs text-slate-500">
+                        🚪 {fmtCleanShort(e.stay.checkIn)} → {fmtCleanShort(e.stay.checkOut)} • {e.stay.nights} night{e.stay.nights === 1 ? '' : 's'}
                       </div>
                     </div>
                   </div>
-                  <div className="text-right flex-shrink-0 flex flex-col items-end gap-1">
+                  <div className="flex-shrink-0">
                     <button
                       onClick={() => toggleHidden(e.id)}
                       title={isHidden ? 'Mark as charged' : 'I\'ll do it myself — remove charge'}
                       className={`text-sm font-bold px-2 py-0.5 rounded transition-colors ${isHidden ? 'text-slate-400 line-through hover:text-slate-600' : 'text-slate-800 hover:text-slate-500'}`}>
                       €{e.cost}
                     </button>
-                    <p className="text-xs text-slate-400">{fmtCleanShort(e.sortDate)}</p>
                   </div>
                 </div>
               </div>

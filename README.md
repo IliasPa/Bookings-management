@@ -1,4 +1,4 @@
-# Apartment Manager v1.2
+# Apartment Manager v1.4
 
 Short-rental property management app for two apartments in Lefkada, Greece.
 
@@ -71,9 +71,16 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 - Bedding change events during long stays — interval configurable (default 4 days)
 - Smart scheduling: bedding change skipped if only 1 night remains after it
 - Timing suggestion: Preferred (weekend slot) · Flexible (weekday evening) · Compromise (back-to-back 11:00–15:00)
+- Each job card shows, at a glance: apartment • job · suggested date, time slot and flexibility · the timing window · and the related stay (check-in → check-out • nights)
+- A cleaning stays **upcoming until the guest it prepares for checks in** — a job whose ideal date has passed but whose booking hasn't started yet is not treated as past
+- **Copy schedule for cleaner** — one button copies the upcoming schedule as plain **Greek** text (no prices, self-cleaned jobs excluded), ready to paste into a chat; compromise (tight same-day) jobs are flagged
 - Self-clean toggle: click the cost amount to mark as done yourself (greyed out, excluded from cost totals and net profit)
-- Filter: Charged only / All
+- Filter: apartment · Charged only · Upcoming / All
 - Preferences: full clean cost, bedding change cost, bedding interval — stored in `cleaning.json` on GitHub
+
+### Notes
+
+- Free-form notes tab for reminders and contacts (e.g. pest-control certificate details), synced to GitHub inside `apartments.json`
 
 ### Settings
 
@@ -86,7 +93,7 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 
 ## Data
 
-All data is stored as JSON files in the GitHub repo under `data/`, read and written via the GitHub Git Data API (single commit per push):
+All data is stored as JSON files in the GitHub repo under `data/`, read and written **at runtime** via the GitHub Git Data API (single commit per push). The app is the source of truth for these files — the local `data/` folder is git-ignored so working-copy snapshots are never committed on top of the live data:
 
 | File | Contents |
 |---|---|

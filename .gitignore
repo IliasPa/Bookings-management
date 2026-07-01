@@ -2,3 +2,8 @@ node_modules/
 .env
 *.log
 .DS_Store
+
+# Live database — the app reads/writes data/*.json on the repo via the GitHub API.
+# Keep the files in the repo (the app needs them) but never commit local snapshots.
+# Existing tracked files are frozen locally with: git update-index --skip-worktree
+data/
