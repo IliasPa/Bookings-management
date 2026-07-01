@@ -79,6 +79,20 @@ function getSuggestion(checkOutStr, nextCheckInStr, backToBack) {
   };
 }
 
+// First booking of an apartment (no previous guest): prepare before arrival.
+// Suggest the day *before* check-in — never the arrival day itself.
+function getFirstSuggestion(checkInStr) {
+  const dayBefore = addDays(checkInStr, -1);
+  const weekend = isWeekend(dayBefore);
+  return {
+    type: weekend ? "preferred" : "flexible",
+    date: dayBefore,
+    timeKey: "evening",
+    label: `${fmtCleanShort(dayBefore)} · evening`,
+    note: weekend ? "Weekend slot before arrival" : "Prepare the day before arrival",
+  };
+}
+
 // Greek text for the cleaner — no prices, no check-in/out or night counts.
 // Each line: Date · Time — Apartment · Job (compromise jobs get a warning flag).
 function fmtGreekDate(d) {
@@ -150,19 +164,13 @@ export function computeCleaningEvents(bookings, apartments, rates = {}) {
 
       const suggestion = prevBooking
         ? getSuggestion(prevBooking.checkOut, booking.checkIn, backToBack)
-        : {
-            type: "flexible",
-            date: parseDateStr(booking.checkIn),
-            timeKey: "before",
-            label: `${fmtCleanShort(booking.checkIn)} · before check-in`,
-            note: "Prepare before first guest",
-          };
+        : getFirstSuggestion(booking.checkIn);
 
       const fullFlexWindow = !prevBooking
         ? "Anytime before check-in day"
         : backToBack
-          ? "Same-day changeover only — clean within 11:00–15:00"
-          : "Anytime between checkout & next check-in";
+          ? "Same-day changeover — clean within 11:00–15:00"
+          : "Anytime between previous check-out & check-in";
 
       events.push({
         id: `clean_${booking.id}`,
@@ -227,7 +235,7 @@ export function computeCleaningEvents(bookings, apartments, rates = {}) {
             label: `Bedding Change (night ${day})`,
             flexWindow: weekend
               ? "Anytime during the day"
-              : "Evening preferred (guest in residence)",
+              : "Evening preferred (guests in residence)",
             detail: `Stay ${fmtCleanShort(booking.checkIn)} → ${fmtCleanShort(booking.checkOut)} · ${booking.nights} nights`,
           });
         }
