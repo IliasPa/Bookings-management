@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
-import { buildPeople } from '../people.js';
+import { buildPeople, resolvePersonId } from '../people.js';
 
 const fmt = n => `€${Math.round(n).toLocaleString('en-EU')}`;
 
@@ -102,10 +102,12 @@ export default function Owners() {
   // Out-of-pocket spend per person: expenses (that happened) + consumables they paid for.
   const personSpend = Object.fromEntries(people.map(p => [p.id, 0]));
   expenses.forEach(e => {
-    if (e.status !== false && personSpend[e.paidBy] !== undefined) personSpend[e.paidBy] += e.totalCost || 0;
+    const pid = resolvePersonId(people, e.paidBy);
+    if (e.status !== false && pid) personSpend[pid] += e.totalCost || 0;
   });
   consumables.forEach(c => {
-    if (personSpend[c.paidBy] !== undefined) personSpend[c.paidBy] += c.totalCost || 0;
+    const pid = resolvePersonId(people, c.paidBy);
+    if (pid) personSpend[pid] += c.totalCost || 0;
   });
 
   const personTotals = people.map(person => {

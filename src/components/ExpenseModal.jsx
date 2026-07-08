@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
-import { buildPeople } from '../people.js';
+import { buildPeople, resolvePersonId } from '../people.js';
 
 export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
   const { expenseCategories, manager } = useData();
@@ -26,7 +26,7 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
     depreciation: false,
     notes: '',
     ...expense,
-    paidBy: expense?.paidBy || 'manager',
+    paidBy: resolvePersonId(people, expense?.paidBy) || 'manager',
   });
 
   const set = (k, v) => setForm(f => {

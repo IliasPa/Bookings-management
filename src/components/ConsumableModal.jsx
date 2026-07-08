@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
-import { buildPeople } from '../people.js';
+import { buildPeople, resolvePersonId } from '../people.js';
 
 export default function ConsumableModal({ consumable, onSave, onClose }) {
   const { apartments, manager } = useData();
@@ -20,7 +20,7 @@ export default function ConsumableModal({ consumable, onSave, onClose }) {
     quantity: 1,
     notes: '',
     ...consumable,
-    paidBy: consumable?.paidBy || 'manager',
+    paidBy: resolvePersonId(people, consumable?.paidBy) || 'manager',
     totalCost: consumable
       ? (consumable.totalCost !== undefined ? consumable.totalCost : (consumable.costPerUnit ? consumable.costPerUnit * consumable.quantity : ''))
       : '',

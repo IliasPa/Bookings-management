@@ -9,3 +9,12 @@ export function buildPeople(apartments, manager) {
     ...(manager?.name ? [{ id: 'manager', name: manager.name, role: 'manager' }] : []),
   ];
 }
+
+// Resolve a stored paidBy reference to a canonical person id, or null if it matches
+// nobody. paidBy is normally a person id ('manager' or an owner's name), but older
+// data may hold the manager's display name (e.g. 'Ilias') instead of 'manager'.
+export function resolvePersonId(people, ref) {
+  if (!ref) return null;
+  const match = people.find(p => p.id === ref || p.name === ref);
+  return match ? match.id : null;
+}
