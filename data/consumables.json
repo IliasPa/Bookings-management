@@ -94,5 +94,17 @@
     "quantity": 136,
     "notes": "Merenda, Peach, Strawberry",
     "totalCost": 17.26
+  },
+  {
+    "id": "cons_1783480923466",
+    "apartment": "general",
+    "name": "Food",
+    "costModel": "perStay",
+    "quantityPerUse": 1,
+    "guestsDefault": 4,
+    "dateBought": "2026-07-04",
+    "quantity": 4,
+    "notes": "",
+    "totalCost": 3.34
   }
 ]
