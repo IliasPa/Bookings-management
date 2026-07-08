@@ -28,7 +28,7 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e3",
@@ -43,7 +43,7 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e4",
@@ -58,7 +58,7 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e5",
@@ -73,7 +73,7 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e6",
@@ -88,7 +88,7 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e7",
@@ -103,7 +103,7 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e8",
@@ -223,7 +223,7 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e16",
@@ -238,12 +238,12 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e17",
       "apartment": "Front",
-      "categoryI": "Bathroom",
+      "categoryI": "Bedroom",
       "categoryII": "Decor",
       "item": "Lamps",
       "where": "",
@@ -253,7 +253,7 @@
       "status": "bought",
       "depreciation": false,
       "notes": "",
-      "paidBy": ""
+      "paidBy": "Mama"
     },
     {
       "id": "e18",
@@ -280,7 +280,9 @@
       "costPerUnit": 2.1,
       "totalCost": 33.6,
       "status": true,
-      "depreciation": false
+      "depreciation": false,
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e20",
@@ -294,7 +296,8 @@
       "totalCost": 76,
       "status": false,
       "depreciation": false,
-      "notes": ""
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e21",
@@ -308,7 +311,8 @@
       "totalCost": 122.96,
       "status": false,
       "depreciation": false,
-      "notes": ""
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e22",
@@ -322,7 +326,8 @@
       "totalCost": 114,
       "status": false,
       "depreciation": false,
-      "notes": ""
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e23",
@@ -336,7 +341,8 @@
       "totalCost": 4.81,
       "status": false,
       "depreciation": false,
-      "notes": ""
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e24",
@@ -349,7 +355,9 @@
       "costPerUnit": 32.8,
       "totalCost": 32.8,
       "status": true,
-      "depreciation": false
+      "depreciation": false,
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e25",
@@ -363,7 +371,8 @@
       "totalCost": 25,
       "status": true,
       "depreciation": true,
-      "notes": ""
+      "notes": "",
+      "paidBy": "manager"
     },
     {
       "id": "e26",
@@ -385,13 +394,14 @@
       "categoryI": "Kitchen",
       "categoryII": "Utilities",
       "item": "Plates",
-      "where": "μαμά",
+      "where": "",
       "quantity": 6,
       "costPerUnit": 6.5,
       "totalCost": 39,
       "status": true,
       "depreciation": false,
-      "notes": ""
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e28",
@@ -445,7 +455,9 @@
       "costPerUnit": 1500,
       "totalCost": 1500,
       "status": true,
-      "depreciation": false
+      "depreciation": false,
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e32",
@@ -459,7 +471,8 @@
       "totalCost": 0,
       "status": true,
       "depreciation": false,
-      "notes": "https://www.skroutz.gr/s/60654879/samsung-smart-tileorasi-50-4k-uhd-led-u8000f-hdr-2025-ue50u8072fuxxh.html"
+      "notes": "https://www.skroutz.gr/s/60654879/samsung-smart-tileorasi-50-4k-uhd-led-u8000f-hdr-2025-ue50u8072fuxxh.html",
+      "paidBy": "Mama"
     },
     {
       "id": "e33",
@@ -500,7 +513,9 @@
       "costPerUnit": 0,
       "totalCost": 0,
       "status": true,
-      "depreciation": false
+      "depreciation": false,
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e36",
@@ -514,7 +529,8 @@
       "totalCost": 0,
       "status": true,
       "depreciation": false,
-      "notes": ""
+      "notes": "",
+      "paidBy": "Mama"
     },
     {
       "id": "e37",
@@ -571,7 +587,8 @@
       "totalCost": 17,
       "status": "amortized",
       "notes": "",
-      "paidBy": ""
+      "paidBy": "manager",
+      "depreciation": false
     },
     {
       "id": "ex_1781727878544",
