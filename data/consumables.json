@@ -9,7 +9,8 @@
     "dateBought": "2026-04-11",
     "quantity": 50,
     "totalCost": 4,
-    "notes": "Temu"
+    "notes": "Temu",
+    "paidBy": "manager"
   },
   {
     "id": "cons_1779764085385",
@@ -21,7 +22,8 @@
     "dateBought": "2026-04-11",
     "quantity": 20,
     "totalCost": 4.8,
-    "notes": "Temu"
+    "notes": "Temu",
+    "paidBy": "manager"
   },
   {
     "id": "cons_1779764176734",
@@ -33,7 +35,8 @@
     "dateBought": "2026-04-11",
     "quantity": 50,
     "totalCost": 8,
-    "notes": "Temu"
+    "notes": "Temu",
+    "paidBy": "manager"
   },
   {
     "id": "cons_1779764242418",
@@ -45,7 +48,8 @@
     "dateBought": "2026-04-11",
     "quantity": 101,
     "totalCost": 13.13,
-    "notes": "Temu"
+    "notes": "Temu",
+    "paidBy": "manager"
   },
   {
     "id": "cons_1779764399980",
@@ -57,7 +61,8 @@
     "dateBought": "2026-04-16",
     "quantity": 5,
     "totalCost": 11,
-    "notes": "Scondo"
+    "notes": "Scondo",
+    "paidBy": "manager"
   },
   {
     "id": "cons_1779764674994",
@@ -69,7 +74,8 @@
     "dateBought": "2026-04-16",
     "quantity": 5,
     "totalCost": 0,
-    "notes": "Scondo"
+    "notes": "Scondo",
+    "paidBy": "manager"
   },
   {
     "id": "cons_1779764736494",
@@ -81,7 +87,8 @@
     "dateBought": "2026-04-16",
     "quantity": 2,
     "totalCost": 7.2,
-    "notes": "Scondo"
+    "notes": "Scondo",
+    "paidBy": "manager"
   },
   {
     "id": "cons_1780684668815",
@@ -93,7 +100,8 @@
     "dateBought": "2026-06-05",
     "quantity": 136,
     "notes": "Merenda, Peach, Strawberry",
-    "totalCost": 17.26
+    "totalCost": 17.26,
+    "paidBy": "manager"
   },
   {
     "id": "cons_1783480923466",
@@ -105,6 +113,7 @@
     "dateBought": "2026-07-04",
     "quantity": 4,
     "notes": "",
-    "totalCost": 3.34
+    "totalCost": 3.34,
+    "paidBy": "manager"
   }
 ]
