@@ -1,4 +1,4 @@
-# Apartment Manager v1.4
+# Apartment Manager v1.5
 
 Short-rental property management app for two apartments in Lefkada, Greece.
 
@@ -37,7 +37,7 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 ### Expenses
 
 - Add, edit, delete expenses
-- Fields: apartment, room (categoryI), sub-category (categoryII), item, supplier, quantity, cost/unit, total cost (auto-fill both ways), notes
+- Fields: apartment, room (categoryI), sub-category (categoryII), item, supplier, **who purchased** (owner or manager, default manager), quantity, cost/unit, total cost (auto-fill both ways), notes
 - Status toggle: ✅ = happened, included in totals · ⬜ = pending, excluded from totals
 - Filters: apartment, room, category, keyword search, sort by date/cost
 - Summary cards per apartment + grand total (pending expenses excluded)
@@ -51,11 +51,13 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 - **Accountant Card** — manage accountant contact information
   - Name, phone, email for communicating booking details
 - **Ownership Shares** — set ownership percentage per apartment (validates 100% per apartment)
-- **Income Distribution** — table showing each owner's share per apartment and total
+- **Income Distribution** — table showing each person's share per apartment, plus two summary columns:
+  - **Net** — share of booking income
+  - **Total** — net plus everything that person paid out of pocket in Expenses & Consumables (reimbursement)
 
 ### Consumables
 
-- Track stock purchases: name, apartment, cost model, quantity, total cost, notes
+- Track stock purchases: name, apartment, cost model, quantity, total cost, who purchased (owner or manager, default manager), notes
 - Cost models:
   - **Per stay** — fixed amount used each stay (e.g. welcome kit: 1 per stay)
   - **Per guest** — consumed per guest (e.g. shampoo sachets: 2 per guest, default 4 guests)
@@ -75,6 +77,7 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 - A cleaning stays **upcoming until the guest it prepares for checks in** — a job whose ideal date has passed but whose booking hasn't started yet is not treated as past
 - **Copy schedule for cleaner** — one button copies the upcoming schedule as plain **Greek** text (no prices, self-cleaned jobs excluded), ready to paste into a chat; compromise (tight same-day) jobs are flagged
 - Self-clean toggle: click the cost amount to mark as done yourself (greyed out, excluded from cost totals and net profit)
+- Summary cards: upcoming full cleans · bedding changes · **Total cost** — everything owed to the cleaner across all charged jobs, past and future
 - Filter: apartment · Charged only · Upcoming / All
 - Preferences: full clean cost, bedding change cost, bedding interval — stored in `cleaning.json` on GitHub
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
+import { buildPeople } from '../people.js';
 
 const fmt = n => `€${Math.round(n).toLocaleString('en-EU')}`;
 
@@ -26,7 +27,7 @@ const fmtPhone = (raw) => {
 };
 
 export default function Owners() {
-  const { bookings, apartments, setApartments, manager, setManager, accountant, setAccountant, markDirty } = useData();
+  const { bookings, expenses, consumables, apartments, setApartments, manager, setManager, accountant, setAccountant, markDirty } = useData();
 
   // ── Apartments management ─────────────────────────────────────────────────
   const [newAptName, setNewAptName] = useState('');
@@ -88,11 +89,7 @@ export default function Owners() {
 
   // ── Derived people list: unique apt owners + manager ──────────────────────
   // Owner ID = their name; Manager ID = 'manager' (stable)
-  const ownerNames = [...new Set(apartments.map(a => a.owner).filter(Boolean))];
-  const people = [
-    ...ownerNames.map(name => ({ id: name, name, role: 'owner' })),
-    ...(manager.name ? [{ id: 'manager', name: manager.name, role: 'manager' }] : []),
-  ];
+  const people = buildPeople(apartments, manager);
 
   // ── Income distribution ───────────────────────────────────────────────────
   const aptNet = {};
@@ -102,16 +99,26 @@ export default function Owners() {
       .reduce((s, b) => s + b.netIncome, 0);
   });
 
+  // Out-of-pocket spend per person: expenses (that happened) + consumables they paid for.
+  const personSpend = Object.fromEntries(people.map(p => [p.id, 0]));
+  expenses.forEach(e => {
+    if (e.status !== false && personSpend[e.paidBy] !== undefined) personSpend[e.paidBy] += e.totalCost || 0;
+  });
+  consumables.forEach(c => {
+    if (personSpend[c.paidBy] !== undefined) personSpend[c.paidBy] += c.totalCost || 0;
+  });
+
   const personTotals = people.map(person => {
     const byApt = {};
-    let total = 0;
+    let net = 0;
     apartments.forEach(apt => {
       const pct    = (shares[apt.id]?.[person.id] || 0) / 100;
       const amount = (aptNet[apt.id] || 0) * pct;
       byApt[apt.id] = amount;
-      total += amount;
+      net += amount;
     });
-    return { ...person, byApt, total };
+    const spend = personSpend[person.id] || 0;
+    return { ...person, byApt, net, spend, total: net + spend };
   });
 
   const aptShareTotals = {};
@@ -387,7 +394,10 @@ export default function Owners() {
       {/* ── Income Distribution ───────────────────────────────────────────── */}
       {people.length > 0 && (
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-semibold text-slate-800 mb-4">Income Distribution</h3>
+          <h3 className="font-semibold text-slate-800 mb-1">Income Distribution</h3>
+          <p className="text-xs text-slate-400 mb-4">
+            Net = share of booking income. Total = net plus what each person paid out of pocket for expenses &amp; consumables.
+          </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -399,6 +409,7 @@ export default function Owners() {
                       <span className="block text-slate-400 normal-case font-normal">{fmt(aptNet[apt.id] || 0)}</span>
                     </th>
                   ))}
+                  <th className="py-2 text-right font-medium px-3">Net</th>
                   <th className="py-2 text-right font-medium px-3">Total</th>
                 </tr>
               </thead>
@@ -419,7 +430,13 @@ export default function Owners() {
                         </span>
                       </td>
                     ))}
-                    <td className="py-3 text-right font-bold text-green-700 px-3">{fmt(person.total)}</td>
+                    <td className="py-3 text-right font-semibold text-slate-700 px-3">{fmt(person.net)}</td>
+                    <td className="py-3 text-right font-bold text-green-700 px-3">
+                      {fmt(person.total)}
+                      {person.spend > 0 && (
+                        <span className="block text-xs font-normal text-slate-400">incl. {fmt(person.spend)} spent</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

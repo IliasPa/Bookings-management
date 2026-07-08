@@ -39,8 +39,6 @@ export default function Expenses() {
       return 0;
     });
 
-  const totalCost = filtered.filter(e => e.status !== false).reduce((s, e) => s + e.totalCost, 0);
-
   const byApt = {};
   expenses.filter(e => e.status !== false).forEach(e => { byApt[e.apartment] = (byApt[e.apartment] || 0) + e.totalCost; });
   const aptOrder = [...apartments.map(a => a.name), 'General'];
@@ -124,8 +122,7 @@ export default function Expenses() {
         {filtered.length === 0 ? (
           <div className="p-12 text-center text-slate-400 text-sm">No expenses found.</div>
         ) : (
-          <>
-            <table className="w-full text-sm">
+          <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-100 text-xs text-slate-500 uppercase tracking-wide">
                   <th className="px-4 py-3 text-left font-medium">Apartment</th>
@@ -181,11 +178,6 @@ export default function Expenses() {
                 ))}
               </tbody>
             </table>
-            <div className="px-4 py-3 border-t border-slate-100 flex justify-between items-center bg-slate-50">
-              <p className="text-xs text-slate-500">{filtered.length} items</p>
-              <p className="text-sm font-semibold text-slate-800">Filtered total: {fmtMoney(totalCost) === '—' ? '€0.00' : fmtMoney(totalCost)}</p>
-            </div>
-          </>
         )}
       </div>
 

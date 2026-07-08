@@ -51,8 +51,8 @@ export default function Cleaning() {
   const isPast = (e) => e.refDate < today;
 
   const upcoming = allEvents.filter(e => !isPast(e));
-  const upcomingCharged = upcoming.filter(e => !hidden.has(e.id));
-  const totalCost = upcomingCharged.reduce((s, e) => s + e.cost, 0);
+  // Everything the owner owes the cleaner across every charged job — past and future.
+  const totalCost = allEvents.filter(e => !hidden.has(e.id)).reduce((s, e) => s + e.cost, 0);
 
   const visible = allEvents
     .filter(e => showAll || !isPast(e))
@@ -91,7 +91,7 @@ export default function Cleaning() {
           <p className="text-2xl font-bold text-slate-800">{upcoming.filter(e => e.type === 'bedding').length}</p>
         </div>
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
-          <p className="text-xs text-slate-500 mb-0.5">Upcoming cost</p>
+          <p className="text-xs text-slate-500 mb-0.5">Total cost</p>
           <p className="text-2xl font-bold text-red-600">€{totalCost}</p>
         </div>
       </div>

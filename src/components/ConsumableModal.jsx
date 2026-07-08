@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
+import { buildPeople } from '../people.js';
 
 export default function ConsumableModal({ consumable, onSave, onClose }) {
-  const { apartments } = useData();
+  const { apartments, manager } = useData();
   const isNew = !consumable;
   const today = new Date().toISOString().split('T')[0];
+
+  // Who could have paid: the manager plus every distinct apartment owner.
+  const people = buildPeople(apartments, manager);
 
   const [form, setForm] = useState({
     apartment: apartments[0]?.id || 'general',
@@ -16,6 +20,7 @@ export default function ConsumableModal({ consumable, onSave, onClose }) {
     quantity: 1,
     notes: '',
     ...consumable,
+    paidBy: consumable?.paidBy || 'manager',
     totalCost: consumable
       ? (consumable.totalCost !== undefined ? consumable.totalCost : (consumable.costPerUnit ? consumable.costPerUnit * consumable.quantity : ''))
       : '',
@@ -116,11 +121,22 @@ export default function ConsumableModal({ consumable, onSave, onClose }) {
             </div>
           </div>
 
-          <div>
-            <label className="text-xs font-medium text-slate-500 mb-1 block">Notes</label>
-            <input type="text" value={form.notes || ''} onChange={e => set('notes', e.target.value)}
-              placeholder="Any notes…"
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">Who purchased</label>
+              <select value={form.paidBy} onChange={e => set('paidBy', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {people.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}{p.role === 'manager' ? ' (mgr)' : ''}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">Notes</label>
+              <input type="text" value={form.notes || ''} onChange={e => set('notes', e.target.value)}
+                placeholder="Any notes…"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
           </div>
 
           <div className="flex gap-3 justify-end pt-2">

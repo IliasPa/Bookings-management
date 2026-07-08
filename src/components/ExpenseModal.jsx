@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
+import { buildPeople } from '../people.js';
 
 export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
-  const { expenseCategories } = useData();
+  const { expenseCategories, manager } = useData();
   const { rooms, categories } = expenseCategories;
 
   const isNew = !expense;
   const defaultApt = apartments[0]?.name || 'General';
   const defaultRoom = rooms[0] || 'General';
+
+  // Who could have paid: the manager plus every distinct apartment owner.
+  const people = buildPeople(apartments, manager);
 
   const [form, setForm] = useState({
     apartment: defaultApt,
@@ -22,6 +26,7 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
     depreciation: false,
     notes: '',
     ...expense,
+    paidBy: expense?.paidBy || 'manager',
   });
 
   const set = (k, v) => setForm(f => {
@@ -86,7 +91,7 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Item</label>
               <input type="text" value={form.item} onChange={e => set('item', e.target.value)} required
@@ -96,6 +101,15 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
               <label className="text-xs font-medium text-slate-500 mb-1 block">Where purchased</label>
               <input type="text" value={form.where} onChange={e => set('where', e.target.value)}
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">Who purchased</label>
+              <select value={form.paidBy} onChange={e => set('paidBy', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {people.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}{p.role === 'manager' ? ' (mgr)' : ''}</option>
+                ))}
+              </select>
             </div>
           </div>
 
