@@ -53,7 +53,7 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 - **Ownership Shares** — set ownership percentage per apartment (validates 100% per apartment)
 - **Income Distribution** — table showing each person's share per apartment, plus two summary columns:
   - **Net** — share of booking income
-  - **Total** — net plus everything that person paid out of pocket in Expenses & Consumables (reimbursement)
+  - **Total** — net plus everything that person paid out of pocket in Expenses & Consumables, plus the whole charged cleaning bill for the manager (who pays the cleaner) — i.e. reimbursement
 
 ### Consumables
 
