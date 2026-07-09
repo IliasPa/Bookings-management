@@ -36,18 +36,6 @@
     "notes": ""
   },
   {
-    "id": "r5",
-    "apartment": "revekka",
-    "checkIn": "2026-08-12",
-    "checkOut": "2026-08-14",
-    "nights": 2,
-    "platform": "Booking",
-    "reservation": 380,
-    "commission": 56.75,
-    "netIncome": 323.25,
-    "notes": ""
-  },
-  {
     "id": "r6",
     "apartment": "revekka",
     "checkIn": "2026-08-16",
