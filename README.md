@@ -38,9 +38,9 @@ Short-rental property management app for two apartments in Lefkada, Greece.
 
 - Add, edit, delete expenses
 - Fields: apartment, room (categoryI), sub-category (categoryII), item, supplier, **who purchased** (owner or manager, default manager), quantity, cost/unit, total cost (auto-fill both ways), notes
-- Status toggle: ✅ = happened, included in totals · ⬜ = pending, excluded from totals
+- Depreciating asset flag: ✅ = amortized asset (shown in the Depr. column)
 - Filters: apartment, room, category, keyword search, sort by date/cost
-- Summary cards per apartment + grand total (pending expenses excluded)
+- Summary cards per apartment + grand total
 - Categories customisable in Settings and synced to GitHub
 
 ### Owners
@@ -52,8 +52,9 @@ Short-rental property management app for two apartments in Lefkada, Greece.
   - Name, phone, email for communicating booking details
 - **Ownership Shares** — set ownership percentage per apartment (validates 100% per apartment)
 - **Income Distribution** — table showing each person's share per apartment, plus two summary columns:
-  - **Net** — share of booking income
-  - **Total** — net plus everything that person paid out of pocket in Expenses & Consumables, plus the whole charged cleaning bill for the manager (who pays the cleaner) — i.e. reimbursement
+  - **Apartment columns / Net** — share of net profit (booking income minus that apartment's expenses, consumables & cleaning; "General" costs are spread across apartments in proportion to their booking income)
+  - **Total** — net plus reimbursement of everything that person paid out of pocket in Expenses & Consumables (missing payers default to the manager), plus the whole charged cleaning bill for the manager (who pays the cleaner)
+  - The sum of all Totals equals the total booking income — owners never receive more than the revenue
 
 ### Consumables
 

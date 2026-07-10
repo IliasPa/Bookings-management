@@ -22,7 +22,6 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
     quantity: 1,
     costPerUnit: '',
     totalCost: '',
-    status: true,
     depreciation: false,
     notes: '',
     ...expense,
@@ -52,8 +51,9 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { status, ...rest } = form;
     onSave({
-      ...form,
+      ...rest,
       quantity: parseFloat(form.quantity) || 0,
       costPerUnit: parseFloat(form.costPerUnit) || 0,
       totalCost: parseFloat(form.totalCost) || 0,

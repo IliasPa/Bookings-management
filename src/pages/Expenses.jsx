@@ -40,7 +40,7 @@ export default function Expenses() {
     });
 
   const byApt = {};
-  expenses.filter(e => e.status !== false).forEach(e => { byApt[e.apartment] = (byApt[e.apartment] || 0) + e.totalCost; });
+  expenses.forEach(e => { byApt[e.apartment] = (byApt[e.apartment] || 0) + e.totalCost; });
   const aptOrder = [...apartments.map(a => a.name), 'General'];
   const grandTotal = Object.values(byApt).reduce((s, v) => s + v, 0);
 

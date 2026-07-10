@@ -133,13 +133,13 @@ export default function Owners() {
       .reduce((s, b) => s + b.netIncome, 0);
   });
 
-  // Out-of-pocket spend per person: expenses (that happened) + consumables they
-  // paid for. Anything without a recognisable payer defaults to the manager.
+  // Out-of-pocket spend per person: expenses + consumables they paid for.
+  // Anything without a recognisable payer defaults to the manager.
   const managerId = people.find((p) => p.role === "manager")?.id;
   const personSpend = Object.fromEntries(people.map((p) => [p.id, 0]));
   expenses.forEach((e) => {
     const pid = resolvePersonId(people, e.paidBy) || managerId;
-    if (e.status !== false && pid) personSpend[pid] += e.totalCost || 0;
+    if (pid) personSpend[pid] += e.totalCost || 0;
   });
   consumables.forEach((c) => {
     const pid = resolvePersonId(people, c.paidBy) || managerId;
@@ -164,7 +164,6 @@ export default function Owners() {
   const aptCosts = Object.fromEntries(apartments.map((a) => [a.id, 0]));
   let generalCosts = 0;
   expenses.forEach((e) => {
-    if (e.status === false) return;
     const apt = apartments.find((a) => a.name === e.apartment);
     if (apt) aptCosts[apt.id] += e.totalCost || 0;
     else generalCosts += e.totalCost || 0;

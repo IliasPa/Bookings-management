@@ -166,7 +166,7 @@ export default function Overview() {
   const [platformFilter, setPlatformFilter] = useState('all');
   const [showSelfClean, setShowSelfClean] = useState(true);
 
-  const statusExpenses = expenses.filter(e => e.status !== false);
+  const statusExpenses = expenses;
 
   const totalGross = bookings.reduce((s, b) => s + b.reservation, 0);
   const totalNet = bookings.reduce((s, b) => s + b.netIncome, 0);
