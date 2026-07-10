@@ -135,10 +135,6 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
 
           <div className="flex gap-6">
             <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-              <input type="checkbox" checked={form.status} onChange={e => set('status', e.target.checked)} className="rounded" />
-              Status
-            </label>
-            <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
               <input type="checkbox" checked={form.depreciation} onChange={e => set('depreciation', e.target.checked)} className="rounded" />
               Depreciating asset
             </label>

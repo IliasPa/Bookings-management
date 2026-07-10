@@ -133,7 +133,7 @@ export default function Expenses() {
                   <th className="px-4 py-3 text-center font-medium">Qty</th>
                   <th className="px-4 py-3 text-right font-medium">Cost/unit</th>
                   <th className="px-4 py-3 text-right font-medium">Total</th>
-                  <th className="px-4 py-3 text-center font-medium">Tags</th>
+                  <th className="px-4 py-3 text-center font-medium">Depr.</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
@@ -153,12 +153,11 @@ export default function Expenses() {
                     <td className="px-4 py-3 text-right text-slate-600">{e.costPerUnit ? `€${e.costPerUnit}` : '—'}</td>
                     <td className="px-4 py-3 text-right font-semibold text-slate-800">{fmtMoney(e.totalCost)}</td>
                     <td className="px-4 py-3 text-center">
-                      <div className="flex gap-1 justify-center items-center">
-                        <span title={e.status !== false ? 'Happened' : 'Pending'} className="text-base leading-none">
-                          {e.status !== false ? '✅' : '⬜'}
-                        </span>
-                        {e.depreciation && <span className="px-1.5 py-0.5 rounded text-xs bg-slate-100 text-slate-600" title="Depreciating asset">📉</span>}
-                      </div>
+                      {e.depreciation ? (
+                        <span title="Depreciating asset" className="text-base leading-none">✅</span>
+                      ) : (
+                        <span className="text-slate-300">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 justify-end">

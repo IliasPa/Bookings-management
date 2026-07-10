@@ -125,6 +125,7 @@ export default function Owners() {
   const people = buildPeople(apartments, manager);
 
   // ── Income distribution ───────────────────────────────────────────────────
+  // Booking income per apartment
   const aptNet = {};
   apartments.forEach((apt) => {
     aptNet[apt.id] = bookings
@@ -132,38 +133,72 @@ export default function Owners() {
       .reduce((s, b) => s + b.netIncome, 0);
   });
 
-  // Out-of-pocket spend per person: expenses (that happened) + consumables they paid for.
+  // Out-of-pocket spend per person: expenses (that happened) + consumables they
+  // paid for. Anything without a recognisable payer defaults to the manager.
+  const managerId = people.find((p) => p.role === "manager")?.id;
   const personSpend = Object.fromEntries(people.map((p) => [p.id, 0]));
   expenses.forEach((e) => {
-    const pid = resolvePersonId(people, e.paidBy);
+    const pid = resolvePersonId(people, e.paidBy) || managerId;
     if (e.status !== false && pid) personSpend[pid] += e.totalCost || 0;
   });
   consumables.forEach((c) => {
-    const pid = resolvePersonId(people, c.paidBy);
+    const pid = resolvePersonId(people, c.paidBy) || managerId;
     if (pid) personSpend[pid] += c.totalCost || 0;
   });
 
   // Cleaning is paid to the cleaner by the manager, so fold the whole charged total
   // (past + future, matching the Cleaning tab) into the manager's out-of-pocket spend.
-  const managerId = people.find((p) => p.role === "manager")?.id;
+  const hiddenClean = new Set(cleaning?.hiddenCosts || []);
+  const cleaningEvents = computeCleaningEvents(
+    bookings,
+    apartments,
+    cleaning?.rates || DEFAULT_CLEAN_RATES,
+  ).filter((ev) => !hiddenClean.has(ev.id));
   if (managerId) {
-    const hiddenClean = new Set(cleaning?.hiddenCosts || []);
-    const cleaningTotal = computeCleaningEvents(
-      bookings,
-      apartments,
-      cleaning?.rates || DEFAULT_CLEAN_RATES,
-    )
-      .filter((ev) => !hiddenClean.has(ev.id))
-      .reduce((s, ev) => s + ev.cost, 0);
-    personSpend[managerId] += cleaningTotal;
+    personSpend[managerId] += cleaningEvents.reduce((s, ev) => s + ev.cost, 0);
   }
+
+  // Costs per apartment: expenses (matched by name), consumables (by id) and
+  // cleaning (by aptId). "General" costs are spread across apartments in
+  // proportion to their booking income.
+  const aptCosts = Object.fromEntries(apartments.map((a) => [a.id, 0]));
+  let generalCosts = 0;
+  expenses.forEach((e) => {
+    if (e.status === false) return;
+    const apt = apartments.find((a) => a.name === e.apartment);
+    if (apt) aptCosts[apt.id] += e.totalCost || 0;
+    else generalCosts += e.totalCost || 0;
+  });
+  consumables.forEach((c) => {
+    if (aptCosts[c.apartment] !== undefined)
+      aptCosts[c.apartment] += c.totalCost || 0;
+    else generalCosts += c.totalCost || 0;
+  });
+  cleaningEvents.forEach((ev) => {
+    if (aptCosts[ev.aptId] !== undefined) aptCosts[ev.aptId] += ev.cost;
+    else generalCosts += ev.cost;
+  });
+
+  // Net profit per apartment = booking income − its costs − its slice of general costs.
+  // This is the pool that gets split by ownership shares, so the owners as a
+  // group never receive more than the actual revenue.
+  const totalAptNet = apartments.reduce((s, a) => s + (aptNet[a.id] || 0), 0);
+  const aptProfit = {};
+  apartments.forEach((apt) => {
+    const generalShare =
+      totalAptNet > 0
+        ? generalCosts * ((aptNet[apt.id] || 0) / totalAptNet)
+        : generalCosts / (apartments.length || 1);
+    aptProfit[apt.id] =
+      (aptNet[apt.id] || 0) - aptCosts[apt.id] - generalShare;
+  });
 
   const personTotals = people.map((person) => {
     const byApt = {};
     let net = 0;
     apartments.forEach((apt) => {
       const pct = (shares[apt.id]?.[person.id] || 0) / 100;
-      const amount = (aptNet[apt.id] || 0) * pct;
+      const amount = (aptProfit[apt.id] || 0) * pct;
       byApt[apt.id] = amount;
       net += amount;
     });
@@ -620,9 +655,9 @@ export default function Owners() {
             Income Distribution
           </h3>
           <p className="text-xs text-slate-400 mb-4">
-            Net = share of booking income. Total = net plus what each person
-            paid out of pocket for expenses, consumables &amp; — for the manager
-            — cleaning.
+            Apartment columns &amp; Net = share of net profit (booking income
+            minus expenses, consumables &amp; cleaning). Total = net plus
+            reimbursement of what each person paid out of pocket.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -636,7 +671,7 @@ export default function Owners() {
                     >
                       {apt.name}
                       <span className="block text-slate-400 normal-case font-normal">
-                        {fmt(aptNet[apt.id] || 0)}
+                        {fmt(aptProfit[apt.id] || 0)}
                       </span>
                     </th>
                   ))}
