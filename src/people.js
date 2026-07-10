@@ -18,3 +18,18 @@ export function resolvePersonId(people, ref) {
   const match = people.find(p => p.id === ref || p.name === ref);
   return match ? match.id : null;
 }
+
+// Badge color per person, by position in the people list — same style as the
+// room tags in Expenses but with distinct hues so the two don't get confused.
+const PERSON_COLORS = [
+  'bg-teal-100 text-teal-700',
+  'bg-orange-100 text-orange-700',
+  'bg-fuchsia-100 text-fuchsia-700',
+  'bg-lime-100 text-lime-700',
+  'bg-cyan-100 text-cyan-700',
+];
+
+export function personColor(people, personId) {
+  const idx = people.findIndex(p => p.id === personId);
+  return idx >= 0 ? PERSON_COLORS[idx % PERSON_COLORS.length] : 'bg-slate-100 text-slate-600';
+}

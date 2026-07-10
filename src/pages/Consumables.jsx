@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
 import ConsumableModal from '../components/ConsumableModal.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
+import WhoBadge from '../components/WhoBadge.jsx';
+import { buildPeople } from '../people.js';
 
 const fmtDate = d => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 const fmtMoney = n => n > 0 ? `€${n.toLocaleString('en-EU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
@@ -34,7 +36,8 @@ function computeConsumed(cons, bookings) {
 }
 
 export default function Consumables() {
-  const { consumables, setConsumables, apartments, bookings, markDirty } = useData();
+  const { consumables, setConsumables, apartments, bookings, manager, markDirty } = useData();
+  const people = buildPeople(apartments, manager);
   const [modal, setModal] = useState(null);
   const [delTarget, setDelTarget] = useState(null);
   const [filterApt, setFilterApt] = useState('all');
@@ -141,6 +144,7 @@ export default function Consumables() {
                 <th className="px-4 py-3 text-right font-medium">Used</th>
                 <th className="px-4 py-3 text-right font-medium">Left</th>
                 <th className="px-4 py-3 text-right font-medium">Cost</th>
+                <th className="px-4 py-3 text-center font-medium">Who</th>
                 <th className="px-4 py-3 text-left font-medium">Stock</th>
                 <th className="px-4 py-3" />
               </tr>
@@ -171,6 +175,9 @@ export default function Consumables() {
                     </td>
                     <td className="px-4 py-3 text-right text-slate-500">
                       {c.costPerUnit > 0 ? fmtMoney(c.totalCost) : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <WhoBadge people={people} paidBy={c.paidBy} />
                     </td>
                     <td className="px-4 py-3">
                       <StockBar remaining={c.remaining} total={c.quantity} />

@@ -40,6 +40,7 @@ Works on desktop and phone: on small screens the sidebar becomes a slide-in menu
 - Add, edit, delete expenses
 - Fields: apartment, room (categoryI), sub-category (categoryII), item, supplier, **who purchased** (owner or manager, default manager), quantity, cost/unit, total cost (auto-fill both ways), notes
 - Depreciating asset flag: ✅ = amortized asset (shown in the Depr. column)
+- **Who** column — color-coded badge per person showing who paid; ⚠️ when the stored payer doesn't match any current person (those entries count as the manager's in the income distribution)
 - Filters: apartment, room, category, keyword search, sort by date/cost
 - Summary cards per apartment + grand total
 - Categories customisable in Settings and synced to GitHub
@@ -64,6 +65,7 @@ Works on desktop and phone: on small screens the sidebar becomes a slide-in menu
   - **Per stay** — fixed amount used each stay (e.g. welcome kit: 1 per stay)
   - **Per guest** — consumed per guest (e.g. shampoo sachets: 2 per guest, default 4 guests)
 - Auto-calculates stays since purchase, units consumed, units remaining
+- **Who** column — same color-coded payer badge as in Expenses (⚠️ for unknown payers)
 - Stock bar: green >50% · amber ≤20% · red 0%
 - Low stock alert card (≤20% remaining, excludes retired items)
 - Retire flag: marks an item as discontinued — excluded from Low Stock alerts, costs still counted in net profit

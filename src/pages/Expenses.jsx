@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useData } from '../DataContext.jsx';
 import ExpenseModal from '../components/ExpenseModal.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
+import WhoBadge from '../components/WhoBadge.jsx';
+import { buildPeople } from '../people.js';
 
 const fmtMoney = n => n === 0 ? '—' : `€${(n || 0).toLocaleString('en-EU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const CAT_COLORS = {
@@ -14,8 +16,9 @@ const CAT_COLORS = {
 };
 
 export default function Expenses() {
-  const { expenses, setExpenses, apartments, markDirty, expenseCategories } = useData();
+  const { expenses, setExpenses, apartments, manager, markDirty, expenseCategories } = useData();
   const { rooms, categories } = expenseCategories;
+  const people = buildPeople(apartments, manager);
 
   const [modal, setModal] = useState(null);
   const [delTarget, setDelTarget] = useState(null);
@@ -134,6 +137,7 @@ export default function Expenses() {
                   <th className="px-4 py-3 text-center font-medium">Qty</th>
                   <th className="px-4 py-3 text-right font-medium">Cost/unit</th>
                   <th className="px-4 py-3 text-right font-medium">Total</th>
+                  <th className="px-4 py-3 text-center font-medium">Who</th>
                   <th className="px-4 py-3 text-center font-medium">Depr.</th>
                   <th className="px-4 py-3" />
                 </tr>
@@ -153,6 +157,9 @@ export default function Expenses() {
                     <td className="px-4 py-3 text-center text-slate-600">{e.quantity}</td>
                     <td className="px-4 py-3 text-right text-slate-600">{e.costPerUnit ? `€${e.costPerUnit}` : '—'}</td>
                     <td className="px-4 py-3 text-right font-semibold text-slate-800">{fmtMoney(e.totalCost)}</td>
+                    <td className="px-4 py-3 text-center">
+                      <WhoBadge people={people} paidBy={e.paidBy} />
+                    </td>
                     <td className="px-4 py-3 text-center">
                       {e.depreciation ? (
                         <span title="Depreciating asset" className="text-base leading-none">✅</span>
