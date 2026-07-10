@@ -1,6 +1,7 @@
-# Apartment Manager v1.5
+# Apartment Manager v1.6
 
 Short-rental property management app for two apartments in Lefkada, Greece.
+Works on desktop and phone: on small screens the sidebar becomes a slide-in menu (☰), stat cards stack, and wide tables scroll horizontally.
 
 **Live app:** https://iliaspa.github.io/Bookings-management/
 

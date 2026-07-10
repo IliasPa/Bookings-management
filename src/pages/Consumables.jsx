@@ -82,7 +82,7 @@ export default function Consumables() {
     <div className="space-y-5">
 
       {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
           <p className="text-xs text-slate-500 mb-0.5">Items tracked</p>
           <p className="text-xl font-bold text-slate-800">{consumables.length}</p>
@@ -127,6 +127,7 @@ export default function Consumables() {
             No consumables yet. Add a stock entry to start tracking usage.
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100 text-xs text-slate-500 uppercase tracking-wide">
@@ -200,6 +201,7 @@ export default function Consumables() {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

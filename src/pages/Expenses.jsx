@@ -122,6 +122,7 @@ export default function Expenses() {
         {filtered.length === 0 ? (
           <div className="p-12 text-center text-slate-400 text-sm">No expenses found.</div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-100 text-xs text-slate-500 uppercase tracking-wide">
@@ -177,6 +178,7 @@ export default function Expenses() {
                 ))}
               </tbody>
             </table>
+          </div>
         )}
       </div>
 

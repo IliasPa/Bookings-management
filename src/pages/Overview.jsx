@@ -250,14 +250,14 @@ export default function Overview() {
   return (
     <div className="space-y-6">
       {/* Top stats */}
-      <div className={`grid gap-4 ${showBookingFinancials ? 'grid-cols-3' : 'grid-cols-2'}`}>
+      <div className={`grid gap-4 ${showBookingFinancials ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2'}`}>
         {showBookingFinancials && <StatCard label="Gross Revenue" value={fmt(totalGross)} sub={`${bookings.length} bookings`} />}
         <StatCard label="Net Revenue" value={fmt(totalNet)} sub={showBookingFinancials ? `after €${Math.round(totalCommission)} commission` : `${bookings.length} bookings`} color="text-green-700" />
         <StatCard label="Net Profit" value={fmt(netProfit)} sub="net − expenses − consumables − cleaning" color={netProfit >= 0 ? 'text-green-700' : 'text-red-600'} />
       </div>
 
       {/* Cost breakdown */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard label="Total Expenses" value={fmt(totalExpenses)} sub={`${statusExpenses.length} items`} color="text-red-600" />
         <StatCard label="Consumables Cost" value={fmt(totalConsumableCost)} sub={`${consumables.length} items tracked`} color="text-red-600" />
         <StatCard label="Cleaning Cost" value={fmt(totalCleaningCost)} sub={`${allCleaningEvents.length} events`} color="text-red-600" />

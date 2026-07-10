@@ -48,7 +48,7 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-semibold text-slate-800">{isNew ? 'Add Booking' : 'Edit Booking'}</h3>
         </div>
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Apartment</label>
@@ -96,7 +96,7 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Reservation (€)</label>
               <input
@@ -133,7 +133,7 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
             {nights > 0 && <span>· €{(netIncome / nights).toFixed(0)}/night</span>}
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Guest Name</label>
               <input

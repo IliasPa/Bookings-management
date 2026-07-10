@@ -67,7 +67,7 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
           <h3 className="font-semibold text-slate-800">{isNew ? 'Add Expense' : 'Edit Expense'}</h3>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Apartment</label>
               <select value={form.apartment} onChange={e => set('apartment', e.target.value)}
@@ -91,7 +91,7 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Item</label>
               <input type="text" value={form.item} onChange={e => set('item', e.target.value)} required
@@ -113,7 +113,7 @@ export default function ExpenseModal({ expense, apartments, onSave, onClose }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Quantity</label>
               <input type="number" min="0" step="1" value={form.quantity} onChange={e => set('quantity', e.target.value)}

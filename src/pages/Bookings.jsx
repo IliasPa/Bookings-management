@@ -119,7 +119,7 @@ export default function Bookings() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex gap-1 flex-wrap">
           <button
             onClick={() => setActiveApt('all')}
@@ -135,7 +135,7 @@ export default function Bookings() {
             >{apt.name}</button>
           ))}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button onClick={() => setModal('add')}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,7 +172,7 @@ export default function Bookings() {
         </div>
       </div>
 
-      <div className={`grid gap-3 ${showBookingFinancials ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-3'}`}>
+      <div className={`grid gap-3 ${showBookingFinancials ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3'}`}>
         {[
           { label: 'Bookings', value: scopeBookings.length },
           { label: 'Nights booked', value: totalNights },
@@ -204,6 +204,7 @@ export default function Bookings() {
         {aptBookings.length === 0 ? (
           <div className="p-12 text-center text-slate-400 text-sm">No bookings found.</div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100 text-xs text-slate-500 uppercase tracking-wide">
@@ -282,6 +283,7 @@ export default function Bookings() {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

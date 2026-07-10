@@ -81,7 +81,7 @@ export default function Cleaning() {
   return (
     <div className="space-y-5 max-w-3xl">
       {/* Summary */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
           <p className="text-xs text-slate-500 mb-0.5">Upcoming full cleans</p>
           <p className="text-2xl font-bold text-slate-800">{upcoming.filter(e => e.type === 'full').length}</p>
@@ -116,7 +116,7 @@ export default function Cleaning() {
 
         {editingRates ? (
           <div className="border-t border-slate-100 pt-3 space-y-3">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="text-xs font-medium text-slate-500 mb-1 block">Full clean (€)</label>
                 <input type="number" min="0" step="1"

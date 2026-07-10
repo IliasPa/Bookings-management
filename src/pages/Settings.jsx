@@ -146,7 +146,7 @@ export default function Settings() {
           The token is saved only in your browser's localStorage.
         </p>
         <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">GitHub owner</label>
               <input type="text" value={ghForm.owner} onChange={e => setGhForm(f => ({ ...f, owner: e.target.value }))}
@@ -160,7 +160,7 @@ export default function Settings() {
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Branch</label>
               <input type="text" value={ghForm.branch} onChange={e => setGhForm(f => ({ ...f, branch: e.target.value }))}

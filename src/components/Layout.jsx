@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink, useLocation, Link } from 'react-router-dom';
 import GitHubButton from './GitHubButton.jsx';
 
@@ -90,21 +91,26 @@ const pageTitles = {
 
 export default function Layout({ children, pushState, pushError, onPush, hasToken }) {
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
   const title = pageTitles[pathname] || 'Apartment Manager';
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      <aside className="w-56 bg-slate-900 flex flex-col flex-shrink-0">
+      {menuOpen && (
+        <div className="fixed inset-0 bg-black/40 z-30 md:hidden" onClick={() => setMenuOpen(false)} />
+      )}
+      <aside className={`fixed inset-y-0 left-0 z-40 w-56 bg-slate-900 flex flex-col transform transition-transform duration-200 md:relative md:translate-x-0 md:flex-shrink-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="px-5 py-5 border-b border-slate-700">
           <p className="text-slate-400 text-xs font-medium uppercase tracking-widest mb-0.5">Lefkada</p>
           <h1 className="text-white font-semibold text-base leading-tight">Apartment Manager</h1>
         </div>
-        <nav className="flex-1 p-3 space-y-0.5">
+        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
           {nav.map(({ to, label, icon }) => (
             <NavLink
               key={to}
               to={to}
               end={to === '/'}
+              onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
                   isActive
@@ -119,13 +125,24 @@ export default function Layout({ children, pushState, pushError, onPush, hasToke
           ))}
         </nav>
         <div className="px-5 py-4 border-t border-slate-700">
-          <p className="text-slate-500 text-xs">v1.3</p>
+          <p className="text-slate-500 text-xs">v1.6</p>
         </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between flex-shrink-0">
-          <h2 className="text-lg font-semibold text-slate-800">{title}</h2>
+        <header className="bg-white border-b border-slate-200 px-4 md:px-6 py-3 flex items-center justify-between flex-shrink-0 gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="p-1.5 -ml-1 rounded-lg text-slate-500 hover:bg-slate-100 md:hidden"
+              aria-label="Open menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <h2 className="text-lg font-semibold text-slate-800 truncate">{title}</h2>
+          </div>
           <GitHubButton state={pushState} error={pushError} onPush={onPush} />
         </header>
         {!hasToken && (
@@ -138,7 +155,7 @@ export default function Layout({ children, pushState, pushError, onPush, hasToke
             to sync data.
           </div>
         )}
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
       </div>
     </div>
   );
