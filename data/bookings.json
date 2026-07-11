@@ -8,8 +8,12 @@
     "platform": "Booking",
     "reservation": 952,
     "commission": 142.17,
-    "netIncome": 809.83,
-    "notes": ""
+    "netIncome": 753.83,
+    "notes": "",
+    "envFee": 56,
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "r3",
@@ -20,8 +24,12 @@
     "platform": "Booking",
     "reservation": 497.8,
     "commission": 82.67,
-    "netIncome": 415.13,
-    "notes": ""
+    "netIncome": 383.13,
+    "notes": "",
+    "envFee": 32,
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "r4",
@@ -32,8 +40,12 @@
     "platform": "Booking",
     "reservation": 1224,
     "commission": 182.79,
-    "netIncome": 1041.21,
-    "notes": ""
+    "netIncome": 977.21,
+    "notes": "",
+    "envFee": 64,
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "r6",
@@ -44,8 +56,12 @@
     "platform": "Booking",
     "reservation": 1062.5,
     "commission": 158.67,
-    "netIncome": 903.83,
-    "notes": ""
+    "netIncome": 847.83,
+    "notes": "",
+    "envFee": 56,
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "b1",
@@ -68,11 +84,12 @@
     "platform": "Direct",
     "reservation": 437,
     "commission": 10,
-    "netIncome": 427,
+    "netIncome": 387,
     "notes": "",
     "guestName": "Θεοχάρη Βασιλική",
     "guestId": "",
-    "guestTaxNumber": ""
+    "guestTaxNumber": "",
+    "envFee": 40
   },
   {
     "id": "b3",
@@ -83,11 +100,12 @@
     "platform": "Airbnb",
     "reservation": 2816,
     "commission": 104.76,
-    "netIncome": 2711.24,
+    "netIncome": 2535.24,
     "notes": "Children with allergies",
     "guestName": "",
     "guestId": "",
-    "guestTaxNumber": ""
+    "guestTaxNumber": "",
+    "envFee": 176
   },
   {
     "id": "b5",
@@ -98,8 +116,12 @@
     "platform": "Booking",
     "reservation": 744.7,
     "commission": 123.67,
-    "netIncome": 621.03,
-    "notes": ""
+    "netIncome": 557.03,
+    "notes": "",
+    "envFee": 64,
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "bk_1779699298607",
@@ -111,7 +133,11 @@
     "commission": 13.1,
     "notes": "",
     "nights": 1,
-    "netIncome": 66.1
+    "netIncome": 58.1,
+    "envFee": 8,
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "bk_1779699803312",
@@ -123,7 +149,11 @@
     "commission": 22.98,
     "notes": "",
     "nights": 1,
-    "netIncome": 77.02
+    "netIncome": 69.02,
+    "envFee": 8,
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": ""
   },
   {
     "id": "bk_1781729982047",
@@ -138,7 +168,8 @@
     "guestTaxNumber": "",
     "notes": "",
     "nights": 7,
-    "netIncome": 870.98
+    "netIncome": 814.98,
+    "envFee": 56
   },
   {
     "id": "bk_1782239083705",
@@ -153,7 +184,8 @@
     "guestTaxNumber": "",
     "notes": "",
     "nights": 4,
-    "netIncome": 530.35
+    "netIncome": 498.35,
+    "envFee": 32
   },
   {
     "id": "bk_1782765237178",
@@ -168,7 +200,8 @@
     "guestTaxNumber": "",
     "notes": "",
     "nights": 2,
-    "netIncome": 185.96
+    "netIncome": 169.96,
+    "envFee": 16
   },
   {
     "id": "bk_1783775074620",
@@ -183,6 +216,7 @@
     "guestTaxNumber": "",
     "notes": "",
     "nights": 2,
-    "netIncome": 268.74
+    "netIncome": 252.74,
+    "envFee": 16
   }
 ]
