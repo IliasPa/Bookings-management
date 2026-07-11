@@ -169,5 +169,20 @@
     "notes": "",
     "nights": 2,
     "netIncome": 185.96
+  },
+  {
+    "id": "bk_1783775074620",
+    "apartment": "revekka",
+    "checkIn": "2026-07-27",
+    "checkOut": "2026-07-29",
+    "platform": "Booking",
+    "reservation": 340,
+    "commission": 71.26,
+    "guestName": "",
+    "guestId": "",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 2,
+    "netIncome": 268.74
   }
 ]
