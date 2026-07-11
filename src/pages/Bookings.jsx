@@ -40,6 +40,7 @@ export default function Bookings() {
   const totalNet = scopeBookings.reduce((s, b) => s + b.netIncome, 0);
   const totalGross = scopeBookings.reduce((s, b) => s + b.reservation, 0);
   const totalCommission = scopeBookings.reduce((s, b) => s + b.commission, 0);
+  const totalEnvFee = scopeBookings.reduce((s, b) => s + (b.envFee || 0), 0);
 
   const handleSave = (data) => {
     if (modal === 'add') {
@@ -178,7 +179,7 @@ export default function Bookings() {
           { label: 'Nights booked', value: totalNights },
           ...(showBookingFinancials ? [
             { label: 'Gross revenue', value: `€${Math.round(totalGross)}` },
-            { label: 'Net revenue', value: `€${Math.round(totalNet)}`, sub: `−€${Math.round(totalCommission)} comm.` },
+            { label: 'Net revenue', value: `€${Math.round(totalNet)}`, sub: `−€${Math.round(totalCommission)} comm. · −€${Math.round(totalEnvFee)} env` },
           ] : [
             { label: 'Net revenue', value: `€${Math.round(totalNet)}` },
           ]),
@@ -215,6 +216,7 @@ export default function Bookings() {
                 <th className="px-4 py-3 text-left font-medium">Platform</th>
                 {showBookingFinancials && <th className="px-4 py-3 text-right font-medium">Gross</th>}
                 {showBookingFinancials && <th className="px-4 py-3 text-right font-medium">Commission</th>}
+                {showBookingFinancials && <th className="px-4 py-3 text-right font-medium">Env. fee</th>}
                 <th className="px-4 py-3 text-right font-medium">Net</th>
                 <th className="px-4 py-3 text-right font-medium">€/night</th>
                 <th className="px-4 py-3" />
@@ -226,7 +228,7 @@ export default function Bookings() {
                 const isActive = new Date(b.checkIn) <= today && new Date(b.checkOut) > today;
                 const nextB = aptBookings[idx + 1];
                 const showDivider = filter === 'all' && isPast && nextB && new Date(nextB.checkOut) > today;
-                const colSpan = 7 + (activeApt === 'all' ? 1 : 0) + (showBookingFinancials ? 2 : 0);
+                const colSpan = 7 + (activeApt === 'all' ? 1 : 0) + (showBookingFinancials ? 3 : 0);
                 return (
                   <React.Fragment key={b.id}>
                   <tr className={`border-b border-slate-50 hover:bg-slate-50 transition-colors ${isPast ? 'opacity-60' : ''}`}>
@@ -250,6 +252,7 @@ export default function Bookings() {
                     </td>
                     {showBookingFinancials && <td className="px-4 py-3 text-right text-slate-600">{fmtMoney(b.reservation)}</td>}
                     {showBookingFinancials && <td className="px-4 py-3 text-right text-red-500">{b.commission > 0 ? `−${fmtMoney(b.commission)}` : '—'}</td>}
+                    {showBookingFinancials && <td className="px-4 py-3 text-right text-red-500">{b.envFee > 0 ? `−${fmtMoney(b.envFee)}` : '—'}</td>}
                     <td className="px-4 py-3 text-right font-semibold text-green-700">{fmtMoney(b.netIncome)}</td>
                     <td className="px-4 py-3 text-right text-slate-500">{b.nights > 0 ? `€${Math.round(b.netIncome / b.nights)}` : '—'}</td>
                     <td className="px-4 py-3">

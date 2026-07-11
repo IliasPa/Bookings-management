@@ -203,7 +203,7 @@ export default function Settings() {
       <Section title="Display">
         <div className="space-y-4">
           <Toggle
-            label="Show gross & commission in Bookings"
+            label="Show gross, commission & env fee in Bookings"
             description="Toggle off to show only net income in the bookings table."
             checked={showBookingFinancials}
             onChange={saveShowBookingFinancials}

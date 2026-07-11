@@ -26,11 +26,12 @@ Works on desktop and phone: on small screens the sidebar becomes a slide-in menu
 ### Bookings
 
 - Add, edit, delete bookings
-- Fields: apartment, check-in, check-out, nights (auto), platform, reservation, commission, net income (auto), guest name, guest ID, tax number, notes
+- Fields: apartment, check-in, check-out, nights (auto), platform, reservation, commission, environmental fee, net income (auto), guest name, guest ID, tax number, notes
+- Environmental fee defaults to **8€ per night** (auto-updates with the dates until edited manually); net income = reservation − commission − env fee
 - Guest personal data (name, ID, tax number) stored but not shown in the bookings table
 - Filter: All / Upcoming / Past — with a visual divider between past and upcoming in All view
 - Per-apartment tabs or all-apartments view
-- Toggle to show/hide gross & commission columns (Settings → Display)
+- Toggle to show/hide gross, commission & env fee columns (Settings → Display); Net revenue card shows the commission and env fee deducted
 - **Email by Month** dropdown — generates formatted emails with monthly booking details:
   - Includes guest information, reservation amounts, payment method, dates, and platform
   - Sends to the accountant's email with pre-filled subject and body

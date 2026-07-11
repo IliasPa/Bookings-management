@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const PLATFORMS = ['Booking', 'Airbnb', 'Direct', 'Friends', 'Other'];
+const ENV_FEE_PER_NIGHT = 8;
 
 const dateStr = (offsetDays = 0) => {
   const d = new Date();
@@ -17,6 +18,7 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
     platform: 'Booking',
     reservation: '',
     commission: '',
+    envFee: '',
     guestName: '',
     guestId: '',
     guestTaxNumber: '',
@@ -24,10 +26,17 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
     ...booking,
   });
 
+  const [envTouched, setEnvTouched] = useState(booking?.envFee != null);
+
   const nights = form.checkIn && form.checkOut
     ? Math.max(0, Math.round((new Date(form.checkOut) - new Date(form.checkIn)) / 86400000))
     : (booking?.nights || 0);
-  const netIncome = (parseFloat(form.reservation) || 0) - (parseFloat(form.commission) || 0);
+
+  useEffect(() => {
+    if (!envTouched) setForm(f => ({ ...f, envFee: nights > 0 ? String(nights * ENV_FEE_PER_NIGHT) : '' }));
+  }, [nights, envTouched]);
+
+  const netIncome = (parseFloat(form.reservation) || 0) - (parseFloat(form.commission) || 0) - (parseFloat(form.envFee) || 0);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -39,6 +48,7 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
       netIncome: parseFloat(netIncome.toFixed(2)),
       reservation: parseFloat(form.reservation) || 0,
       commission: parseFloat(form.commission) || 0,
+      envFee: parseFloat(form.envFee) || 0,
     });
   };
 
@@ -96,7 +106,7 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">Reservation (€)</label>
               <input
@@ -117,6 +127,17 @@ export default function BookingModal({ booking, apartments, onSave, onClose }) {
                 step="0.01"
                 value={form.commission}
                 onChange={e => set('commission', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">Env. Fee (€)</label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={form.envFee}
+                onChange={e => { setEnvTouched(true); set('envFee', e.target.value); }}
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
