@@ -11,8 +11,8 @@
     "netIncome": 753.83,
     "notes": "",
     "envFee": 56,
-    "guestName": "",
-    "guestId": "",
+    "guestName": "Stankovic Branimir",
+    "guestId": "014940518",
     "guestTaxNumber": ""
   },
   {
@@ -211,7 +211,7 @@
     "platform": "Booking",
     "reservation": 340,
     "commission": 71.26,
-    "guestName": "",
+    "guestName": "Xenofon Verros",
     "guestId": "",
     "guestTaxNumber": "",
     "notes": "",
