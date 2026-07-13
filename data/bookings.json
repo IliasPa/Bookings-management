@@ -218,5 +218,21 @@
     "nights": 2,
     "netIncome": 252.74,
     "envFee": 16
+  },
+  {
+    "id": "bk_1783952870798",
+    "apartment": "back",
+    "checkIn": "2026-07-24",
+    "checkOut": "2026-07-26",
+    "platform": "Airbnb",
+    "reservation": 291.2,
+    "commission": 36.9,
+    "envFee": 16,
+    "guestName": "Nikos",
+    "guestId": "",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 2,
+    "netIncome": 238.3
   }
 ]
