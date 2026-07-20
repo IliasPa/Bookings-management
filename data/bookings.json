@@ -250,5 +250,21 @@
     "notes": "",
     "nights": 2,
     "netIncome": 252.74
+  },
+  {
+    "id": "bk_1784552353342",
+    "apartment": "revekka",
+    "checkIn": "2026-07-20",
+    "checkOut": "2026-07-21",
+    "platform": "Booking",
+    "reservation": 18,
+    "commission": 9.53,
+    "envFee": 8,
+    "guestName": "Αθηνά Πασχάλη",
+    "guestId": "AA383523",
+    "guestTaxNumber": "301177624",
+    "notes": "Πατήρ Δημήτριος Χήτος",
+    "nights": 1,
+    "netIncome": 0.47
   }
 ]
