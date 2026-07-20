@@ -234,5 +234,21 @@
     "notes": "",
     "nights": 2,
     "netIncome": 238.3
+  },
+  {
+    "id": "bk_1784531405078",
+    "apartment": "revekka",
+    "checkIn": "2026-07-21",
+    "checkOut": "2026-07-23",
+    "platform": "Booking",
+    "reservation": 340,
+    "commission": 71.26,
+    "envFee": 16,
+    "guestName": "Süleyman Albayrak",
+    "guestId": "",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 2,
+    "netIncome": 252.74
   }
 ]
