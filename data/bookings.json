@@ -258,14 +258,14 @@
     "checkOut": "2026-07-21",
     "platform": "Booking",
     "reservation": 18,
-    "commission": 9.53,
+    "commission": 1.78,
     "envFee": 8,
     "guestName": "Αθηνά Πασχάλη",
     "guestId": "AA383523",
     "guestTaxNumber": "301177624",
     "notes": "Πατήρ Δημήτριος Χήτος",
     "nights": 1,
-    "netIncome": 0.47
+    "netIncome": 8.22
   },
   {
     "id": "bk_1784920370331",
@@ -274,13 +274,13 @@
     "checkOut": "2026-08-16",
     "platform": "Booking",
     "reservation": 734,
-    "commission": 0,
+    "commission": 116.58,
     "envFee": 32,
     "guestName": "DIMITRA KOUROU",
     "guestId": "",
     "guestTaxNumber": "",
     "notes": "",
     "nights": 4,
-    "netIncome": 702
+    "netIncome": 585.42
   }
 ]
