@@ -779,6 +779,48 @@
       "depreciation": false,
       "notes": "",
       "paidBy": "manager"
+    },
+    {
+      "id": "ex_1784922343943",
+      "apartment": "Back",
+      "categoryI": "Bathroom",
+      "categoryII": "Utilities",
+      "item": "Iron",
+      "where": "Kotsovolos",
+      "quantity": 1,
+      "costPerUnit": 50,
+      "totalCost": 50,
+      "depreciation": true,
+      "notes": "",
+      "paidBy": "manager"
+    },
+    {
+      "id": "ex_1784922372450",
+      "apartment": "Back",
+      "categoryI": "Bathroom",
+      "categoryII": "Utilities",
+      "item": "Iron Board",
+      "where": "Profi",
+      "quantity": 1,
+      "costPerUnit": 28,
+      "totalCost": 28,
+      "depreciation": true,
+      "notes": "",
+      "paidBy": "manager"
+    },
+    {
+      "id": "ex_1784922466526",
+      "apartment": "General",
+      "categoryI": "General",
+      "categoryII": "Maintenance",
+      "item": "Disinfestation",
+      "where": "-",
+      "quantity": 1,
+      "costPerUnit": 0,
+      "totalCost": 0,
+      "depreciation": false,
+      "notes": "",
+      "paidBy": "Mama"
     }
   ],
   "categories": {

@@ -266,5 +266,21 @@
     "notes": "Πατήρ Δημήτριος Χήτος",
     "nights": 1,
     "netIncome": 0.47
+  },
+  {
+    "id": "bk_1784920370331",
+    "apartment": "revekka",
+    "checkIn": "2026-08-12",
+    "checkOut": "2026-08-16",
+    "platform": "Booking",
+    "reservation": 734,
+    "commission": 0,
+    "envFee": 32,
+    "guestName": "DIMITRA KOUROU",
+    "guestId": "",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 4,
+    "netIncome": 702
   }
 ]
