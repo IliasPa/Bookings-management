@@ -226,14 +226,14 @@
     "checkOut": "2026-07-26",
     "platform": "Airbnb",
     "reservation": 291.2,
-    "commission": 23.03,
+    "commission": 95.92,
     "envFee": 16,
     "guestName": "BELIS NIKOLAOS",
     "guestId": "HXA157475216",
     "guestTaxNumber": "157475216",
-    "notes": "252.17   286.17",
+    "notes": "-43.02 for the cancelation (included in commission)",
     "nights": 2,
-    "netIncome": 252.17
+    "netIncome": 179.28
   },
   {
     "id": "bk_1784531405078",
@@ -242,14 +242,14 @@
     "checkOut": "2026-07-23",
     "platform": "Booking",
     "reservation": 340,
-    "commission": 71.26,
+    "commission": 53.83,
     "envFee": 16,
     "guestName": "Süleyman Albayrak",
-    "guestId": "",
+    "guestId": "U25660257",
     "guestTaxNumber": "",
     "notes": "",
     "nights": 2,
-    "netIncome": 252.74
+    "netIncome": 270.17
   },
   {
     "id": "bk_1784552353342",
