@@ -103,6 +103,14 @@ function fmtGreekDate(d) {
   });
 }
 
+// Done lines are compact: no weekday, no time — just "4 Ιουλ".
+function fmtGreekDayMonth(d) {
+  return new Date(d).toLocaleDateString("el-GR", {
+    day: "numeric",
+    month: "short",
+  });
+}
+
 const GR_TIME = {
   evening: "απόγευμα",
   anytime: "οποτεδήποτε",
@@ -120,17 +128,32 @@ function scheduleFieldsGr(e) {
   };
 }
 
+// Recap of already-done jobs shown above the schedule.
+// ✅ = full clean, ☑️ = bedding change.
+function formatDoneSection(done) {
+  if (!done.length) return "";
+  const lines = done.map((e) => {
+    const bedding = e.type === "bedding";
+    const icon = bedding ? "☑️" : "✅";
+    const job = bedding ? "Αλλαγή σεντονιών" : "Πλήρης καθαρισμός";
+    return `${icon} ${fmtGreekDayMonth(e.suggestion.date)} — ${e.aptName} · ${job}`;
+  });
+  return `Έγιναν\n${lines.join("\n")}\n\n`;
+}
+
 // Build the cleaner's schedule as plain Greek text.
-// events: already-filtered list (e.g. upcoming, hidden jobs removed).
+// events: already-filtered upcoming list (hidden jobs removed).
+// done: already-completed jobs, listed as a recap on top.
 export function formatCleaningSchedule(
   events,
-  { showAll = false, today = new Date() } = {},
+  { today = new Date(), done = [] } = {},
 ) {
-  const header = showAll
-    ? "Πρόγραμμα καθαρισμού"
-    : `Πρόγραμμα καθαρισμού (από ${fmtGreekDate(today)})`;
+  const recap = formatDoneSection(done);
+  // The copy is a snapshot taken today: everything below is dated from today on,
+  // everything before it is in the recap above.
+  const header = `Πρόγραμμα καθαρισμού (από ${fmtGreekDate(today)})`;
 
-  if (!events.length) return `${header}\n(καμία εργασία)`;
+  if (!events.length) return `${recap}${header}\n(καμία εργασία)`;
 
   const lines = events.map((e) => {
     const { date, time, job, compromise } = scheduleFieldsGr(e);
@@ -142,7 +165,7 @@ export function formatCleaningSchedule(
     ? "\n\n⚠ συμβιβασμός = ίδια μέρα check-out/check-in, καθάρισμα υποχρεωτικά 11:00–15:00"
     : "";
 
-  return `${header}\n${lines.join("\n")}${legend}`;
+  return `${recap}${header}\n${lines.join("\n")}${legend}`;
 }
 
 export function computeCleaningEvents(bookings, apartments, rates = {}) {

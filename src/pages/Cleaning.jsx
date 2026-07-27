@@ -4,6 +4,9 @@ import { computeCleaningEvents, fmtCleanShort, formatCleaningSchedule } from '..
 
 const DEFAULT_RATES = { fullClean: 60, beddingChange: 60, beddingInterval: 4 };
 
+// How far back the "already done" recap in the cleaner's copy reaches.
+const DONE_LOOKBACK_DAYS = 30;
+
 const TYPE_LABELS = {
   preferred: { bg: 'bg-green-100', text: 'text-green-700', label: 'Preferred' },
   flexible:  { bg: 'bg-blue-100',  text: 'text-blue-700',  label: 'Flexible'  },
@@ -59,11 +62,24 @@ export default function Cleaning() {
     .filter(e => filterApt === 'all' || e.aptId === filterApt)
     .filter(e => !onlyCharged || !hidden.has(e.id));
 
+  // The copy splits on the day it's taken: a job whose cleaning date has passed
+  // counts as done, whatever the booking it prepares for is doing.
+  const isCleaned = (e) => e.suggestion.date < today;
+
   // For the cleaner: same on-screen scope, but always drop the "I'll do it myself" jobs.
-  const copyList = visible.filter(e => !hidden.has(e.id));
+  const copyList = visible.filter(e => !hidden.has(e.id) && !isCleaned(e));
+
+  // Recap of what's already been done, on top of the copied schedule.
+  // Only the recent past — the cleaner doesn't need the whole history.
+  const doneSince = new Date(today); doneSince.setDate(doneSince.getDate() - DONE_LOOKBACK_DAYS);
+  const doneList = allEvents
+    .filter(isCleaned)
+    .filter(e => !hidden.has(e.id))
+    .filter(e => filterApt === 'all' || e.aptId === filterApt)
+    .filter(e => e.suggestion.date >= doneSince);
 
   const copySchedule = async () => {
-    const text = formatCleaningSchedule(copyList, { showAll, today });
+    const text = formatCleaningSchedule(copyList, { today, done: doneList });
     try {
       await navigator.clipboard.writeText(text);
     } catch {
@@ -179,11 +195,14 @@ export default function Cleaning() {
 
       {/* Copy for cleaner */}
       <div className="flex items-center gap-2 flex-wrap">
-        <button onClick={copySchedule} disabled={copyList.length === 0}
+        <button onClick={copySchedule} disabled={copyList.length === 0 && doneList.length === 0}
           className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
           {copied ? '✓ Copied' : 'Copy schedule for cleaner'}
         </button>
-        <span className="text-xs text-slate-400">{copyList.length} job{copyList.length === 1 ? '' : 's'} · Greek · no prices</span>
+        <span className="text-xs text-slate-400">
+          {copyList.length} job{copyList.length === 1 ? '' : 's'}
+          {doneList.length > 0 && ` · ${doneList.length} done`} · Greek · no prices
+        </span>
       </div>
 
       {/* Events list */}
