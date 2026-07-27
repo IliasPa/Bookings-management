@@ -27,9 +27,9 @@
     "netIncome": 383.13,
     "notes": "",
     "envFee": 32,
-    "guestName": "",
-    "guestId": "",
-    "guestTaxNumber": ""
+    "guestName": "ΜΑΡΙΝΑ ΚΟΥΚΟΥΡΟΥΖΗ",
+    "guestId": "ΑΝ392576",
+    "guestTaxNumber": "177576288 "
   },
   {
     "id": "r4",
@@ -226,14 +226,14 @@
     "checkOut": "2026-07-26",
     "platform": "Airbnb",
     "reservation": 291.2,
-    "commission": 36.9,
+    "commission": 23.03,
     "envFee": 16,
     "guestName": "Nikos",
     "guestId": "",
     "guestTaxNumber": "",
-    "notes": "",
+    "notes": "252.17   286.17",
     "nights": 2,
-    "netIncome": 238.3
+    "netIncome": 252.17
   },
   {
     "id": "bk_1784531405078",
