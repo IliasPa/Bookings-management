@@ -87,8 +87,8 @@
     "netIncome": 387,
     "notes": "",
     "guestName": "Θεοχάρη Βασιλική",
-    "guestId": "",
-    "guestTaxNumber": "",
+    "guestId": "ΑΟ761153",
+    "guestTaxNumber": "183458621",
     "envFee": 40
   },
   {
@@ -101,9 +101,9 @@
     "reservation": 2816,
     "commission": 104.76,
     "netIncome": 2535.24,
-    "notes": "Children with allergies",
-    "guestName": "",
-    "guestId": "",
+    "notes": "Children with allergies (eggs and peanuts)",
+    "guestName": "Galya Hristova",
+    "guestId": "575076226",
     "guestTaxNumber": "",
     "envFee": 176
   },

@@ -115,5 +115,18 @@
     "notes": "",
     "totalCost": 3.34,
     "paidBy": "manager"
+  },
+  {
+    "id": "cons_1785669980204",
+    "apartment": "general",
+    "name": "Toilet Paper",
+    "costModel": "perStay",
+    "quantityPerUse": 4,
+    "guestsDefault": 4,
+    "dateBought": "2026-07-27",
+    "quantity": 8,
+    "notes": "",
+    "paidBy": "manager",
+    "totalCost": 8.26
   }
 ]

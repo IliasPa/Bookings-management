@@ -821,6 +821,34 @@
       "depreciation": false,
       "notes": "",
       "paidBy": "Mama"
+    },
+    {
+      "id": "ex_1785669792604",
+      "apartment": "Back",
+      "categoryI": "Kitchen",
+      "categoryII": "Decor",
+      "item": "LED",
+      "where": "PROFI",
+      "quantity": 3,
+      "costPerUnit": 4.5,
+      "totalCost": 13.5,
+      "depreciation": true,
+      "notes": "",
+      "paidBy": "manager"
+    },
+    {
+      "id": "ex_1785669843687",
+      "apartment": "Back",
+      "categoryI": "General",
+      "categoryII": "Other",
+      "item": "Fodd-snacks",
+      "where": "Market In",
+      "quantity": 1,
+      "costPerUnit": 20.75,
+      "totalCost": 20.75,
+      "depreciation": true,
+      "notes": "",
+      "paidBy": "manager"
     }
   ],
   "categories": {
