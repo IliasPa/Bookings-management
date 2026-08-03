@@ -877,6 +877,34 @@
       "depreciation": true,
       "notes": "broke",
       "paidBy": "manager"
+    },
+    {
+      "id": "ex_1785798986009",
+      "apartment": "Back",
+      "categoryI": "General",
+      "categoryII": "Maintenance",
+      "item": "Locked out",
+      "where": "Lock smith",
+      "quantity": 1,
+      "costPerUnit": 100,
+      "totalCost": 100,
+      "depreciation": false,
+      "notes": "",
+      "paidBy": "manager"
+    },
+    {
+      "id": "ex_1785799036595",
+      "apartment": "Back",
+      "categoryI": "General",
+      "categoryII": "Maintenance",
+      "item": "Door Lock",
+      "where": "Skroutz",
+      "quantity": 1,
+      "costPerUnit": 123,
+      "totalCost": 123,
+      "depreciation": true,
+      "notes": "electronic lock",
+      "paidBy": "manager"
     }
   ],
   "categories": {
