@@ -849,6 +849,34 @@
       "depreciation": true,
       "notes": "",
       "paidBy": "manager"
+    },
+    {
+      "id": "ex_1785777601614",
+      "apartment": "Back",
+      "categoryI": "Kitchen",
+      "categoryII": "Appliances",
+      "item": "plates",
+      "where": "Jambo",
+      "quantity": 12,
+      "costPerUnit": 3.06,
+      "totalCost": 36.76,
+      "depreciation": true,
+      "notes": "They asked to have more plates.",
+      "paidBy": "manager"
+    },
+    {
+      "id": "ex_1785777640065",
+      "apartment": "Front",
+      "categoryI": "Bathroom",
+      "categoryII": "Utilities",
+      "item": "Shower cable",
+      "where": "Profi",
+      "quantity": 1,
+      "costPerUnit": 4.95,
+      "totalCost": 4.95,
+      "depreciation": true,
+      "notes": "broke",
+      "paidBy": "manager"
     }
   ],
   "categories": {
