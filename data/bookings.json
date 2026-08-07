@@ -266,5 +266,21 @@
     "notes": "",
     "nights": 4,
     "netIncome": 585.42
+  },
+  {
+    "id": "bk_1786131623961",
+    "apartment": "revekka",
+    "checkIn": "2026-08-06",
+    "checkOut": "2026-08-08",
+    "platform": "Booking",
+    "reservation": 340,
+    "commission": 43.83,
+    "envFee": 16,
+    "guestName": "Hajderaj Faikel",
+    "guestId": "BB9363852",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 2,
+    "netIncome": 280.17
   }
 ]
