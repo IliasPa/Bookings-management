@@ -905,6 +905,34 @@
       "depreciation": true,
       "notes": "electronic lock",
       "paidBy": "manager"
+    },
+    {
+      "id": "ex_1786651501243",
+      "apartment": "Front",
+      "categoryI": "Bathroom",
+      "categoryII": "Appliances",
+      "item": "Soap Dispenser",
+      "where": "Jumbo",
+      "quantity": 1,
+      "costPerUnit": 5.21,
+      "totalCost": 5.21,
+      "depreciation": true,
+      "notes": "",
+      "paidBy": "manager"
+    },
+    {
+      "id": "ex_1786651517175",
+      "apartment": "Back",
+      "categoryI": "Bathroom",
+      "categoryII": "Appliances",
+      "item": "Soap Dispenser",
+      "where": "Jumbo",
+      "quantity": 1,
+      "costPerUnit": 5.21,
+      "totalCost": 5.21,
+      "depreciation": true,
+      "notes": "",
+      "paidBy": "manager"
     }
   ],
   "categories": {
