@@ -282,5 +282,37 @@
     "notes": "",
     "nights": 2,
     "netIncome": 280.17
+  },
+  {
+    "id": "bk_1787400464379",
+    "apartment": "revekka",
+    "checkIn": "2026-08-25",
+    "checkOut": "2026-09-01",
+    "platform": "Booking",
+    "reservation": 1067.5,
+    "commission": 168.14,
+    "envFee": 56,
+    "guestName": "Marius Filoti",
+    "guestId": "",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 7,
+    "netIncome": 843.36
+  },
+  {
+    "id": "bk_1787400594014",
+    "apartment": "back",
+    "checkIn": "2026-09-01",
+    "checkOut": "2026-09-11",
+    "platform": "Booking",
+    "reservation": 930,
+    "commission": 141.82,
+    "envFee": 80,
+    "guestName": "Ileana Muntean",
+    "guestId": "U",
+    "guestTaxNumber": "",
+    "notes": "",
+    "nights": 10,
+    "netIncome": 708.18
   }
 ]
