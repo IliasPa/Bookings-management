@@ -53,6 +53,11 @@ export default function Bookings() {
     setModal(null);
   };
 
+  const togglePaid = (id) => {
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, paid: !b.paid } : b));
+    markDirty();
+  };
+
   const handleDelete = () => {
     setBookings(prev => prev.filter(b => b.id !== delTarget.id));
     markDirty();
@@ -257,6 +262,13 @@ export default function Bookings() {
                     <td className="px-4 py-3 text-right text-slate-500">{b.nights > 0 ? `€${Math.round(b.netIncome / b.nights)}` : '—'}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 justify-end">
+                        <button onClick={() => togglePaid(b.id)}
+                          className={`p-1.5 rounded transition-colors ${b.paid ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-slate-300 hover:text-slate-500 hover:bg-slate-100'}`}
+                          title={b.paid ? 'Paid by platform — click to unmark' : 'Mark as paid by platform'}>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={b.paid ? 2.5 : 1.5} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </button>
                         <button onClick={() => setModal(b)} className="p-1.5 rounded text-slate-400 hover:text-blue-600 hover:bg-blue-50" title="Edit">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
