@@ -59,8 +59,8 @@
     "netIncome": 847.83,
     "notes": "",
     "envFee": 56,
-    "guestName": "",
-    "guestId": "",
+    "guestName": "Barta Judit",
+    "guestId": "323588UE",
     "guestTaxNumber": ""
   },
   {
@@ -119,8 +119,8 @@
     "netIncome": 557.03,
     "notes": "",
     "envFee": 64,
-    "guestName": "",
-    "guestId": "",
+    "guestName": "Aleksandar Milanovski",
+    "guestId": "M0741460",
     "guestTaxNumber": ""
   },
   {
@@ -164,7 +164,7 @@
     "reservation": 680,
     "commission": 149.65,
     "guestName": "Altin Pepa",
-    "guestId": "",
+    "guestId": "BD2816511",
     "guestTaxNumber": "",
     "notes": "",
     "nights": 4,
@@ -262,7 +262,7 @@
     "envFee": 32,
     "guestName": "DIMITRA KOUROU",
     "guestId": "",
-    "guestTaxNumber": "",
+    "guestTaxNumber": "176265741",
     "notes": "",
     "nights": 4,
     "netIncome": 585.42
