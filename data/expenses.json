@@ -815,9 +815,9 @@
       "categoryII": "Maintenance",
       "item": "Disinfestation",
       "where": "-",
-      "quantity": 1,
-      "costPerUnit": 0,
-      "totalCost": 0,
+      "quantity": 2,
+      "costPerUnit": 50,
+      "totalCost": 100,
       "depreciation": false,
       "notes": "",
       "paidBy": "Mama"
